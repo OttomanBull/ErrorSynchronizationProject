@@ -12,6 +12,7 @@ namespace ErrorFinding
     {
         public void GetErrorListApi()
         {
+            List<List<string>> errorCodesAndMessages = new List<List<string>>();
             //verileri nereden alıcağımı programa göstermek için bir url tanımladım
             string url = "https://developmentapi.fonhub.xyzteknoloji.com/api/errorrecord/all";
             //WebClient kullnarak json dosyasındaki verileri convert edip indiriyoruz
@@ -26,11 +27,13 @@ namespace ErrorFinding
                     // JSON verileri C# nesnesine dönüştürüldü, artık errorList dizisi üzerinden kullanabiliriz
 
                     // Verilerin hepsini konsola yazdırıyoruz
+
                     foreach (ErrorListApi error in errorList)
                     {
-                        Console.WriteLine("Extended Error Code: " + error.extendedErrorCode);
-                        Console.WriteLine("Default Description: " + error.defaultDescription);
-
+                        //errorCodesAndMessages.Add();
+                        //errorCodesAndMessages[0].Add(error.defaultDescription);
+                        Console.WriteLine("Extended Error Code: " + errorCodesAndMessages);
+                        Console.WriteLine("Default Description: " + errorCodesAndMessages[0]);
                         Console.WriteLine();
                     }
 
@@ -43,4 +46,3 @@ namespace ErrorFinding
             }
         }
     }
-}
