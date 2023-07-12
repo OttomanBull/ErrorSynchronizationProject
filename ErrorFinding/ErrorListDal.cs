@@ -8,7 +8,7 @@ namespace ErrorFinding
 {
     public class ErrorListDal
     {
-        public void GetErrorListApi()
+        public void GetErrorListApi(List<ErrorListApi> errorListApiList)
         {
             //verileri nereden alıcağımı programa göstermek için bir url tanımladım
             string url = "https://developmentapi.fonhub.xyzteknoloji.com/api/errorrecord/all";
@@ -26,10 +26,11 @@ namespace ErrorFinding
                     // Verilerin hepsini konsola yazdırıyoruz
                     foreach (ErrorListApi error in errorListApi)
                     {
-                        Console.WriteLine("Extended Error Code: " + error.extendedErrorCode);
-                        Console.WriteLine("Default Description: " + error.defaultDescription);
+                        //Console.WriteLine("Extended Error Code: " + error.extendedErrorCode);
+                        //Console.WriteLine("Default Description: " + error.defaultDescription);
 
-                        Console.WriteLine();
+                        //Console.WriteLine();
+                        errorListApiList.Add(error);
                     }
 
                     //Hata durumunda gelicek uyarı mesajı
@@ -62,15 +63,13 @@ namespace ErrorFinding
 
                 keyValuePairs.Add(item.Name, value);
 
-                Console.WriteLine(item.Name);
-                Console.WriteLine(item.Value);
-                Console.WriteLine("");
             }
 
             Console.ReadLine();
 
         }
-        public void GetErrorListManagement(string path)
+
+        public void GetErrorListManagement(string path, List<ErrorListManagement> errorListManagements)
         {
             string allErrorText = File.ReadAllText(path);
 
@@ -86,16 +85,26 @@ namespace ErrorFinding
                 errorTextTemp += '\"';
 
                 int codeFinishPoint = errorTextTemp.IndexOf(":");
-                string removeChar = " ";
-                string errorCode = errorTextTemp.Substring(0, codeFinishPoint - 1).Replace(removeChar, string.Empty);
+                string removeChar = "\n";
+                string removeCharEmpty = " ";
+                string errorCode = errorTextTemp.Substring(0, codeFinishPoint );
+                //errorCode = errorCode.Substring(0, codeFinishPoint).Replace(removeCharEmpty, string.Empty);
+                errorCode = errorCode.Replace("\n", "").Replace(" ", "");
 
                 int messageStartPoint = errorTextTemp.IndexOf("\"");
                 int messageFinishPoint = errorTextTemp.LastIndexOf("\"");
 
                 string errorMessage = errorTextTemp.Substring(messageStartPoint + 1, messageFinishPoint - messageStartPoint - 1);
-                Console.WriteLine(errorCode + ":  " + errorMessage);
-            }
-        }
-    } 
 
+                ErrorListManagement errorListManagement = new ErrorListManagement();
+                errorListManagement.extendedErrorCode = errorCode;
+                errorListManagement.defaultDescription = errorMessage;
+                errorListManagements.Add(errorListManagement);
+               // Console.WriteLine(errorCode + ":  " + errorMessage);
+            }
+
+        }
+
+
+    }
 }
