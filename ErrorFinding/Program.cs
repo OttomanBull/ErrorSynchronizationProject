@@ -11,8 +11,9 @@ class Program
     {
         ErrorListDal errorListDal = new ErrorListDal();
         errorListDal.GetErrorListApi();
-        Console.WriteLine("test 1 2 3 4");
+        //errorListDal.GetErrorListUI();
       
+
     }
 }
 

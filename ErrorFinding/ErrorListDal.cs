@@ -1,10 +1,8 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.IO;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ErrorFinding
 {
@@ -12,7 +10,6 @@ namespace ErrorFinding
     {
         public void GetErrorListApi()
         {
-            List<List<string>> errorCodesAndMessages = new List<List<string>>();
             //verileri nereden alıcağımı programa göstermek için bir url tanımladım
             string url = "https://developmentapi.fonhub.xyzteknoloji.com/api/errorrecord/all";
             //WebClient kullnarak json dosyasındaki verileri convert edip indiriyoruz
@@ -22,18 +19,16 @@ namespace ErrorFinding
                 {
                     string json = webClient.DownloadString(url);
                     //indirdiğimiz verilerin ErrorList adlı bir listeye convert edilerek gitmesini istediğimizi belirttik
-                    ErrorListApi[] errorList = JsonConvert.DeserializeObject<ErrorListApi[]>(json);
+                    ErrorListApi[] errorListApi = JsonConvert.DeserializeObject<ErrorListApi[]>(json);
 
                     // JSON verileri C# nesnesine dönüştürüldü, artık errorList dizisi üzerinden kullanabiliriz
 
                     // Verilerin hepsini konsola yazdırıyoruz
-
-                    foreach (ErrorListApi error in errorList)
+                    foreach (ErrorListApi error in errorListApi)
                     {
-                        //errorCodesAndMessages.Add();
-                        //errorCodesAndMessages[0].Add(error.defaultDescription);
-                        Console.WriteLine("Extended Error Code: " + errorCodesAndMessages);
-                        Console.WriteLine("Default Description: " + errorCodesAndMessages[0]);
+                        Console.WriteLine("Extended Error Code: " + error.extendedErrorCode);
+                        Console.WriteLine("Default Description: " + error.defaultDescription);
+
                         Console.WriteLine();
                     }
 
@@ -45,4 +40,35 @@ namespace ErrorFinding
                 }
             }
         }
+        public void GetErrorListUI()
+        {
+            Dictionary<string, string> keyValuePairs = new Dictionary<string, string>();
+
+            Tuple<int, int> tuple = new Tuple<int, int>(1, 2);
+
+            StreamReader StreamReader = new StreamReader(@"C:\Users\Work and Study\Desktop\english-UI.json");
+            var jsonData = StreamReader.ReadToEnd();
+            //var errorListUI = JsonConvert.DeserializeObject(jsonData);
+
+            //var stringJson = errorListUI.ToString(); 
+
+            JObject jsonObject = JObject.Parse(jsonData);
+
+            var result = jsonObject.SelectToken("errorCodes");
+
+            foreach (JProperty item in result.Children())
+            {
+                var value = item.Value.ToString();
+
+                keyValuePairs.Add(item.Name, value);
+
+                Console.WriteLine(item.Name);
+                Console.WriteLine(item.Value);
+                Console.WriteLine("");
+            }
+
+            Console.ReadLine();
+
+        }
     }
+}
