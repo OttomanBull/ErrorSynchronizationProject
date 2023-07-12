@@ -12,7 +12,7 @@ class Program
         ErrorListDal errorListDal = new ErrorListDal();
         //errorListDal.GetErrorListApi();
         //errorListDal.GetErrorListUI();
-        errorListDal.GetErrorListManagement("C://Users//Elif Aslan//Desktop//errorSynk//ErrorSynchronizationProject//ErrorFinding//ErrorFolders//tr_TR.js");
+        errorListDal.GetErrorListManagement("C:\\Users\\Work and Study\\Documents\\GitHub\\ErrorSynchronizationProject\\ErrorFinding\\ErrorFolders\\en_US.js");
 
 
 
