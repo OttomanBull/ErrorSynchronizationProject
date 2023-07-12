@@ -70,5 +70,32 @@ namespace ErrorFinding
             Console.ReadLine();
 
         }
-    }
+        public void GetErrorListManagement(string path)
+        {
+            string allErrorText = File.ReadAllText(path);
+
+            int startPoint = allErrorText.IndexOf("{");
+            int finishPoint = allErrorText.LastIndexOf(",");
+
+            string clearErrorText = allErrorText.Substring(startPoint + 1, finishPoint - startPoint - 1);
+            string[] errorLine = clearErrorText.Split("\",");
+
+            foreach (string errorText in errorLine)
+            {
+                string errorTextTemp = errorText;
+                errorTextTemp += '\"';
+
+                int codeFinishPoint = errorTextTemp.IndexOf(":");
+                string removeChar = " ";
+                string errorCode = errorTextTemp.Substring(0, codeFinishPoint - 1).Replace(removeChar, string.Empty);
+
+                int messageStartPoint = errorTextTemp.IndexOf("\"");
+                int messageFinishPoint = errorTextTemp.LastIndexOf("\"");
+
+                string errorMessage = errorTextTemp.Substring(messageStartPoint + 1, messageFinishPoint - messageStartPoint - 1);
+                Console.WriteLine(errorCode + ":  " + errorMessage);
+            }
+        }
+    } 
+
 }
