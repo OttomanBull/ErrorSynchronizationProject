@@ -8,49 +8,32 @@ namespace ErrorFinding
 {
     public class ErrorListDal
     {
-        public void GetErrorListApi()
+        public List<KeyValuePair<string, string>> GetErrorListApi()
         {
             //verileri nereden alıcağımı programa göstermek için bir url tanımladım
             string url = "https://developmentapi.fonhub.xyzteknoloji.com/api/errorrecord/all";
             //WebClient kullnarak json dosyasındaki verileri convert edip indiriyoruz
             using (WebClient webClient = new WebClient())
             {
-                try
-                {
+                
                     string json = webClient.DownloadString(url);
-                    //indirdiğimiz verilerin ErrorList adlı bir listeye convert edilerek gitmesini istediğimizi belirttik
-                    ErrorListApi[] errorListApi = JsonConvert.DeserializeObject<ErrorListApi[]>(json);
+                //indirdiğimiz verilerin ErrorList adlı bir listeye convert edilerek gitmesini istediğimizi belirttik
 
-                    // JSON verileri C# nesnesine dönüştürüldü, artık errorList dizisi üzerinden kullanabiliriz
+                List<KeyValuePair<string, string>> errorListApi = JsonConvert.DeserializeObject<List<KeyValuePair<string, string>>>(json);
 
-                    // Verilerin hepsini konsola yazdırıyoruz
-                    foreach (ErrorListApi error in errorListApi)
-                    {
-                        Console.WriteLine("Extended Error Code: " + error.extendedErrorCode);
-                        Console.WriteLine("Default Description: " + error.defaultDescription);
+                    return errorListApi;
 
-                        Console.WriteLine();
-                    }
-
-                    //Hata durumunda gelicek uyarı mesajı
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine("Hata oluştu: " + ex.Message);
-                }
+            
             }
         }
-        public void GetErrorListUI()
+        public List<KeyValuePair<string, string>> GetErrorListUI()
         {
-            Dictionary<string, string> keyValuePairs = new Dictionary<string, string>();
-
-            Tuple<int, int> tuple = new Tuple<int, int>(1, 2);
+            List<KeyValuePair<string, string>> errorListUI = new List<KeyValuePair<string, string>>();
+            
 
             StreamReader StreamReader = new StreamReader(@"C:\Users\Work and Study\Desktop\english-UI.json");
             var jsonData = StreamReader.ReadToEnd();
-            //var errorListUI = JsonConvert.DeserializeObject(jsonData);
-
-            //var stringJson = errorListUI.ToString(); 
+          
 
             JObject jsonObject = JObject.Parse(jsonData);
 
@@ -59,16 +42,12 @@ namespace ErrorFinding
             foreach (JProperty item in result.Children())
             {
                 var value = item.Value.ToString();
+                var name = item.Name.ToString();
 
-                keyValuePairs.Add(item.Name, value);
-
-                Console.WriteLine(item.Name);
-                Console.WriteLine(item.Value);
-                Console.WriteLine("");
+                errorListUI.Add(new KeyValuePair<string, string>(name, value));                      
             }
 
-            Console.ReadLine();
-
+            return errorListUI;
         }
         public void GetErrorListManagement(string path)
         {
@@ -96,6 +75,14 @@ namespace ErrorFinding
                 Console.WriteLine(errorCode + ":  " + errorMessage);
             }
         }
+
+        public void ErrorCodeDiffrent(IErrorList list1, IErrorList list2,IErrorList list3)
+        {
+           
+        }
+       
+
+
     } 
 
 }
