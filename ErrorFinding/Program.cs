@@ -13,7 +13,7 @@ class Program
         //errorListDal.GetErrorListApi();
         //errorListDal.GetErrorListUI();
         errorListDal.GetErrorListManagement("C:\\Users\\Work and Study\\Documents\\GitHub\\ErrorSynchronizationProject\\ErrorFinding\\ErrorFolders\\en_US.js");
-
+        Console.WriteLine(  "sasasa");
 
 
     }
