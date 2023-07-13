@@ -25,9 +25,9 @@ namespace ErrorFinding
 
         public List<ErrorList> GetErrorListUI()
         {
-            List<ErrorList> errorListUI2 = new List<ErrorList>();
+            List<ErrorList> errorListUI = new List<ErrorList>();
 
-            string url = "https://raw.githubusercontent.com/xyztek/CrowdFundingUI/master/src/shared/language/english.json?token=GHSAT0AAAAAACFBXO3EANKMDUZ3GVB6I75OZFP5WFQ";
+            string url = "https://raw.githubusercontent.com/xyztek/CrowdFundingUI/master/src/shared/language/english.json?token=GHSAT0AAAAAACFBXO3FWVRGBSAWWHWBLH2KZFP75BA";
             using (WebClient client = new WebClient())
             {
                 var jsonData = client.DownloadString(url);
@@ -42,11 +42,11 @@ namespace ErrorFinding
                     error.extendedErrorCode = item.Name.ToString();
                     error.defaultDescription = item.Value.ToString();
 
-                    errorListUI2.Add(error);
+                    errorListUI.Add(error);
                 }
             }
 
-            return errorListUI2;
+            return errorListUI;
         }
 
       
@@ -77,18 +77,6 @@ namespace ErrorFinding
             }
         }
 
-        public List<ErrorList> ErrorCodeComparison(List<ErrorList> list1, List<ErrorList> list2)
-        {
-            List<string> extendedErrorCodes1 = list1.Select(x => x.extendedErrorCode).ToList();
-            List<string> extendedErrorCodes2 = list2.Select(x => x.extendedErrorCode).ToList();
-
-            List<string> uniqueExtendedErrorCodes = extendedErrorCodes1.Except(extendedErrorCodes2).ToList();
-
-            List<ErrorList> uniqueErrors = list1.Where(x => uniqueExtendedErrorCodes.Contains(x.extendedErrorCode)).ToList();
-
-            return uniqueErrors;
-        }
-
-
+      
     }
 }

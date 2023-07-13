@@ -13,11 +13,12 @@ class Program
     {
         List<ErrorList> liste3 = new List<ErrorList>();
 
-
+        ErrorSynchronization errorSynchronization = new ErrorSynchronization();
         ErrorListDal errorListDal = new ErrorListDal();
         var errorListApi = errorListDal.GetErrorListApi();
 
-        List<ErrorList> MyErrorList = errorListDal.ErrorCodeComparison(errorListDal.GetErrorListApi(), errorListDal.GetErrorListUI());
+        
+        List<ErrorList> MyErrorList = errorSynchronization.ErrorCodeComparison(errorListDal.GetErrorListApi(), errorListDal.GetErrorListUI());
         int count = MyErrorList.Count;
 
         foreach (var item in MyErrorList)
