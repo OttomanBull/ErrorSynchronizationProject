@@ -15,10 +15,10 @@ class Program
 
 
         ErrorListDal errorListDal = new ErrorListDal();
-        //var errorListApi =errorListDal.GetErrorListApi();
+        var errorListApi = errorListDal.GetErrorListApi();
 
-        List<ErrorList> MyErrorList = errorListDal.ErrorCodeComparison2(errorListDal.GetErrorListApi(), errorListDal.GetErrorListUI());
-        int count=MyErrorList.Count;
+        List<ErrorList> MyErrorList = errorListDal.ErrorCodeComparison(errorListDal.GetErrorListApi(), errorListDal.GetErrorListUI());
+        int count = MyErrorList.Count;
 
         foreach (var item in MyErrorList)
         {
@@ -26,9 +26,9 @@ class Program
             Console.WriteLine(item.defaultDescription);
             Console.WriteLine("");
         }
-       
-        Console.WriteLine("toplam farklılık sayısı="+ count);
 
+        Console.WriteLine("toplam farklılık sayısı=" + count);
+        errorListDal.GetErrorListUI();
 
 
 

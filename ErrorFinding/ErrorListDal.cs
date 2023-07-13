@@ -25,29 +25,31 @@ namespace ErrorFinding
 
         public List<ErrorList> GetErrorListUI()
         {
-            List<ErrorList> errorListUI = new List<ErrorList>();
+            List<ErrorList> errorListUI2 = new List<ErrorList>();
 
-            StreamReader StreamReader = new StreamReader(@"C:\Users\Work and Study\Desktop\english-UI.json");
-            var jsonData = StreamReader.ReadToEnd();
-            JObject jsonObject = JObject.Parse(jsonData);
-
-            var result = jsonObject.SelectToken("errorCodes");
-
-
-
-            foreach (JProperty item in result.Children())
+            string url = "https://raw.githubusercontent.com/xyztek/CrowdFundingUI/master/src/shared/language/english.json?token=GHSAT0AAAAAACFBXO3EANKMDUZ3GVB6I75OZFP5WFQ";
+            using (WebClient client = new WebClient())
             {
-                ErrorList error = new ErrorList();
+                var jsonData = client.DownloadString(url);
+                JObject jsonObject = JObject.Parse(jsonData);
 
-                error.extendedErrorCode = item.Name.ToString();
-                error.defaultDescription = item.Value.ToString();
+                var result = jsonObject.SelectToken("errorCodes");
 
-                errorListUI.Add(error);
+                foreach (JProperty item in result.Children())
+                {
+                    ErrorList error = new ErrorList();
 
+                    error.extendedErrorCode = item.Name.ToString();
+                    error.defaultDescription = item.Value.ToString();
+
+                    errorListUI2.Add(error);
+                }
             }
 
-            return errorListUI;
+            return errorListUI2;
         }
+
+      
         public void GetErrorListManagement(string path)
         {
             string allErrorText = File.ReadAllText(path);
@@ -76,15 +78,6 @@ namespace ErrorFinding
         }
 
         public List<ErrorList> ErrorCodeComparison(List<ErrorList> list1, List<ErrorList> list2)
-        {
-            List<ErrorList> errorListComparison = new List<ErrorList>();
-            errorListComparison = list1.Except(list2).ToList();
-            return errorListComparison;
-        }
-
-       
-
-        public List<ErrorList> ErrorCodeComparison2(List<ErrorList> list1, List<ErrorList> list2)
         {
             List<string> extendedErrorCodes1 = list1.Select(x => x.extendedErrorCode).ToList();
             List<string> extendedErrorCodes2 = list2.Select(x => x.extendedErrorCode).ToList();
