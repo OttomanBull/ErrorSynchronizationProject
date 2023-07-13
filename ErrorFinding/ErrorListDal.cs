@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
 
@@ -8,43 +9,41 @@ namespace ErrorFinding
 {
     public class ErrorListDal
     {
-        public List<KeyValuePair<string, string>> GetErrorListApi()
+
+        public List<ErrorList> GetErrorListApi()
         {
-            //verileri nereden alıcağımı programa göstermek için bir url tanımladım
             string url = "https://developmentapi.fonhub.xyzteknoloji.com/api/errorrecord/all";
-            //WebClient kullnarak json dosyasındaki verileri convert edip indiriyoruz
+
             using (WebClient webClient = new WebClient())
             {
-                
-                    string json = webClient.DownloadString(url);
-                //indirdiğimiz verilerin ErrorList adlı bir listeye convert edilerek gitmesini istediğimizi belirttik
+                string json = webClient.DownloadString(url);
+                List<ErrorList> errorListApi = JsonConvert.DeserializeObject<List<ErrorList>>(json);
 
-                List<KeyValuePair<string, string>> errorListApi = JsonConvert.DeserializeObject<List<KeyValuePair<string, string>>>(json);
-
-                    return errorListApi;
-
-            
+                return errorListApi;
             }
         }
-        public List<KeyValuePair<string, string>> GetErrorListUI()
+
+        public List<ErrorList> GetErrorListUI()
         {
-            List<KeyValuePair<string, string>> errorListUI = new List<KeyValuePair<string, string>>();
-            
+            List<ErrorList> errorListUI = new List<ErrorList>();
 
             StreamReader StreamReader = new StreamReader(@"C:\Users\Work and Study\Desktop\english-UI.json");
             var jsonData = StreamReader.ReadToEnd();
-          
-
             JObject jsonObject = JObject.Parse(jsonData);
 
             var result = jsonObject.SelectToken("errorCodes");
 
+
+
             foreach (JProperty item in result.Children())
             {
-                var value = item.Value.ToString();
-                var name = item.Name.ToString();
+                ErrorList error = new ErrorList();
 
-                errorListUI.Add(new KeyValuePair<string, string>(name, value));                      
+                error.extendedErrorCode = item.Name.ToString();
+                error.defaultDescription = item.Value.ToString();
+
+                errorListUI.Add(error);
+
             }
 
             return errorListUI;
@@ -76,13 +75,27 @@ namespace ErrorFinding
             }
         }
 
-        public void ErrorCodeDiffrent(IErrorList list1, IErrorList list2,IErrorList list3)
+        public List<ErrorList> ErrorCodeComparison(List<ErrorList> list1, List<ErrorList> list2)
         {
-           
+            List<ErrorList> errorListComparison = new List<ErrorList>();
+            errorListComparison = list1.Except(list2).ToList();
+            return errorListComparison;
         }
+
        
 
+        public List<ErrorList> ErrorCodeComparison2(List<ErrorList> list1, List<ErrorList> list2)
+        {
+            List<string> extendedErrorCodes1 = list1.Select(x => x.extendedErrorCode).ToList();
+            List<string> extendedErrorCodes2 = list2.Select(x => x.extendedErrorCode).ToList();
 
-    } 
+            List<string> uniqueExtendedErrorCodes = extendedErrorCodes1.Except(extendedErrorCodes2).ToList();
 
+            List<ErrorList> uniqueErrors = list1.Where(x => uniqueExtendedErrorCodes.Contains(x.extendedErrorCode)).ToList();
+
+            return uniqueErrors;
+        }
+
+
+    }
 }

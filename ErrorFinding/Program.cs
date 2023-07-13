@@ -11,19 +11,23 @@ class Program
 {
     static void Main()
     {
-        List<IErrorList> liste3 = new List<IErrorList>();
+        List<ErrorList> liste3 = new List<ErrorList>();
 
 
         ErrorListDal errorListDal = new ErrorListDal();
         //var errorListApi =errorListDal.GetErrorListApi();
-        var errorListUI= errorListDal.GetErrorListUI();
 
+        List<ErrorList> MyErrorList = errorListDal.ErrorCodeComparison2(errorListDal.GetErrorListApi(), errorListDal.GetErrorListUI());
+        int count=MyErrorList.Count;
 
-        errorListDal.GetErrorListApi();
-
-        List<KeyValuePair<string, string>> myList = new List<KeyValuePair<string, string>>();
-        //myList = (List<KeyValuePair<string, string>>)errorListUI.Except(errorListApi);
-        //errorListDal.GetErrorListManagement("C:\\Users\\Work and Study\\Documents\\GitHub\\ErrorSynchronizationProject\\ErrorFinding\\ErrorFolders\\en_US.js");
+        foreach (var item in MyErrorList)
+        {
+            Console.WriteLine(item.extendedErrorCode);
+            Console.WriteLine(item.defaultDescription);
+            Console.WriteLine("");
+        }
+       
+        Console.WriteLine("toplam farklılık sayısı="+ count);
 
 
 

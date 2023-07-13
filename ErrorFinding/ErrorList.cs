@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ErrorFinding
 {
-    internal class ErrorListUI : IErrorList
+    public class ErrorList : IErrorList
     {
         public string extendedErrorCode { get; set; }
         public string defaultDescription { get; set; }
