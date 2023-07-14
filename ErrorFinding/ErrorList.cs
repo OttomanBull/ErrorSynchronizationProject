@@ -8,7 +8,7 @@ namespace ErrorFinding
 {
     public class ErrorList : IErrorList
     {
-        public string extendedErrorCode { get; set; }
-        public string defaultDescription { get; set; }
+        public string ExtendedErrorCode { get; set; }
+        public string DefaultDescription { get; set; }
     }
 }

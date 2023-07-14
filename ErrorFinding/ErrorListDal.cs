@@ -9,7 +9,7 @@ namespace ErrorFinding
 {
     public class ErrorListDal
     {
-
+      
         public List<ErrorList> GetErrorListApi()
         {
             string url = "https://developmentapi.fonhub.xyzteknoloji.com/api/errorrecord/all";
@@ -42,8 +42,8 @@ namespace ErrorFinding
                 {
                     ErrorList error = new ErrorList();
 
-                    error.extendedErrorCode = item.Name.ToString();
-                    error.defaultDescription = item.Value.ToString();
+                    error.ExtendedErrorCode = item.Name.ToString();
+                    error.DefaultDescription = item.Value.ToString();
 
                     errorListUI.Add(error);
                 }
