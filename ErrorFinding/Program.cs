@@ -18,17 +18,33 @@ class Program
         var errorListApi = errorListDal.GetErrorListApi();
 
         
-        List<ErrorList> MyErrorList = errorSynchronization.ErrorCodeComparison(errorListDal.GetErrorListApi(), errorListDal.GetErrorListUI());
-        int count = MyErrorList.Count;
+        List<ErrorList> WillBeAddedUI = errorSynchronization.ErrorCodeComparison(errorListDal.GetErrorListApi(), errorListDal.GetErrorListUI());
+        List<ErrorList> ToBeRemovedUI = errorSynchronization.ErrorCodeComparison(errorListDal.GetErrorListUI(), errorListDal.GetErrorListApi());
+        int AddedCount = WillBeAddedUI.Count;
+        int RemovedCount = ToBeRemovedUI.Count;
 
-        foreach (var item in MyErrorList)
+        Console.WriteLine("Apide olup UI da olmayanlar");
+        Console.WriteLine("");
+        foreach (var item in ToBeRemovedUI)
         {
             Console.WriteLine(item.extendedErrorCode);
             Console.WriteLine(item.defaultDescription);
             Console.WriteLine("");
         }
 
-        Console.WriteLine("toplam farklılık sayısı=" + count);
+
+        Console.WriteLine("UIda olup Apide olmayanlar");
+        Console.WriteLine("");
+        foreach (var item in WillBeAddedUI)
+        {
+            Console.WriteLine(item.extendedErrorCode);
+            Console.WriteLine(item.defaultDescription);
+            Console.WriteLine("");
+        }
+
+        Console.WriteLine("UI a eklenecek kod sayısı= " + AddedCount);
+        Console.WriteLine("UI dan silinecek kod sayısı= " + RemovedCount);
+
         errorListDal.GetErrorListUI();
 
 
