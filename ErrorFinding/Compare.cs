@@ -8,51 +8,41 @@ namespace ErrorFinding
 {
     public class Compare
     {  
-        public void compareErrors(List<ErrorListApi> apiErrors, List<ErrorListManagement> compareErrors)
+        public void compareErrors(List<ErrorListApi> apiErrors, List<ErrorListApi> compareErrors)
         {
-            //add
-            int count = 0;
-            foreach (ErrorListApi apiError in apiErrors)
-            {
+            Console.WriteLine("managament'a  eklenecek errorlar");
+            foreach (ErrorListApi apiError in apiErrors.ToList()){
                 bool found = false;
-                foreach (ErrorListManagement compareError in compareErrors)
-                {   //api'daki error uı'da var
-                    if (apiError.extendedErrorCode.Equals(compareError.extendedErrorCode))
-                    {
+                foreach (ErrorListApi compareError in compareErrors){   
+                    if (apiError.extendedErrorCode.Equals(compareError.extendedErrorCode)){  //api'daki error uı'da var
                         found = true;
                     }
-                    else //uı'da yok
-                    {
-                    }
+                    else //management'da yok
+                    {}
                 }
-                if (found == false)
-                {
-                    ErrorListManagement newError = new ErrorListManagement();
+                if (!found){
+                    ErrorListApi newError = new ErrorListApi();
                     newError.extendedErrorCode = apiError.extendedErrorCode;
                     newError.defaultDescription = apiError.defaultDescription;
                     compareErrors.Add(newError);
+                    Console.WriteLine(apiError.extendedErrorCode);
                 }
             }
-            //remove
-            foreach (ErrorListManagement compareError in compareErrors.ToList())
-            {
+            Console.WriteLine("managament'dan çıkartılacak errorlar");
+            foreach (ErrorListApi compareError in compareErrors.ToList()){
                 bool found = false;
-                foreach (ErrorListApi apiError in apiErrors)
-                {   //uı'daki error api'da var
-                    if (compareError.extendedErrorCode.Equals(apiError.extendedErrorCode))
-                    {
+                foreach (ErrorListApi apiError in apiErrors){   //uı'daki error api'da var
+                    if (compareError.extendedErrorCode.Equals(apiError.extendedErrorCode)){
                         found = true;
                     }
                     else //api'da yok
-                    {
-                    }
+                    {}
                 }
-                if (found == false)
-                {
+                if (!found){
                     compareErrors.Remove(compareError);
+                    Console.WriteLine(compareError.extendedErrorCode);
                 }
             }
-
         }
     }
 }

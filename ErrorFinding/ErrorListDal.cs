@@ -3,6 +3,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.IO;
 using System.Net;
+using System.Text;
 
 namespace ErrorFinding
 {
@@ -69,42 +70,66 @@ namespace ErrorFinding
 
         }
 
-        public void GetErrorListManagement(string path, List<ErrorListManagement> errorListManagements)
+        public void GetErrorListManagement(string path, List<ErrorListApi> errorListManagements)
         {
-            string allErrorText = File.ReadAllText(path);
-
-            int startPoint = allErrorText.IndexOf("{");
-            int finishPoint = allErrorText.LastIndexOf(",");
-
-            string clearErrorText = allErrorText.Substring(startPoint + 1, finishPoint - startPoint - 1);
-            string[] errorLine = clearErrorText.Split("\",");
-
-            foreach (string errorText in errorLine)
+            using (WebClient wc = new WebClient())
             {
-                string errorTextTemp = errorText;
-                errorTextTemp += '\"';
-
-                int codeFinishPoint = errorTextTemp.IndexOf(":");
-                string removeChar = "\n";
-                string removeCharEmpty = " ";
-                string errorCode = errorTextTemp.Substring(0, codeFinishPoint );
-                //errorCode = errorCode.Substring(0, codeFinishPoint).Replace(removeCharEmpty, string.Empty);
-                errorCode = errorCode.Replace("\n", "").Replace(" ", "");
-
-                int messageStartPoint = errorTextTemp.IndexOf("\"");
-                int messageFinishPoint = errorTextTemp.LastIndexOf("\"");
-
-                string errorMessage = errorTextTemp.Substring(messageStartPoint + 1, messageFinishPoint - messageStartPoint - 1);
-
-                ErrorListManagement errorListManagement = new ErrorListManagement();
-                errorListManagement.extendedErrorCode = errorCode;
-                errorListManagement.defaultDescription = errorMessage;
-                errorListManagements.Add(errorListManagement);
-               // Console.WriteLine(errorCode + ":  " + errorMessage);
+                wc.Headers.Add("Authorization: token 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");
+                wc.Headers.Add("Accept: application / vnd.github.v3.raw");
+                try
+                {
+                    wc.DownloadFile("https://raw.githubusercontent.com/xyztek/CrowdFundingManagement/master/src/lang/errorCodes/tr_TR.js", @"C:/Users/Elif Aslan/Desktop/test.txt");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.ToString());
+                }
             }
+                string allErrorText = File.ReadAllText(@"C:/Users/Elif Aslan/Desktop/test.txt",Encoding.UTF8);
+
+                int startPoint = allErrorText.IndexOf("{");
+                int finishPoint = allErrorText.LastIndexOf(",");
+
+                string clearErrorText = allErrorText.Substring(startPoint + 1, finishPoint - startPoint - 1);
+                int clearCharIndex= clearErrorText.LastIndexOf('\"');
+                clearErrorText= clearErrorText.Remove(clearCharIndex);
+                //Console.WriteLine(clearErrorText);
+                string[] stringSeperator = new string[] { "\",", "\'," };
+                string[] errorLine = clearErrorText.Split(stringSeperator, StringSplitOptions.None);
+
+                foreach (string errorText in errorLine)
+                {
+                    string errorTextTemp = errorText;
+                    int codeFinishPoint = errorTextTemp.IndexOf(":");
+                    string errorCode = errorTextTemp.Substring(0, codeFinishPoint);
+                    errorCode = errorCode.Replace("\n", "").Replace(" ", "");
+
+                    string errorMessage = errorTextTemp.Substring(codeFinishPoint + 1, errorTextTemp.Length - codeFinishPoint - 1);
+                    string errorMessageCheck = errorMessage.Replace("\n", "").Replace(" ", "");
+                    int messageStartPoint = 0;
+                    int messageFinishPoint = 0;
+
+                    if (errorMessageCheck[0] == '\"')
+                    {
+                        errorMessage += "\"";
+                        messageStartPoint = errorMessage.IndexOf("\"");
+                        messageFinishPoint = errorMessage.LastIndexOf("\"");
+                    }
+                    else
+                    {
+                        errorMessage += "\'";
+                        messageStartPoint = errorMessage.IndexOf("\'");
+                        messageFinishPoint = errorMessage.LastIndexOf("\'");
+                    }
+                    errorMessage = errorMessage.Substring(messageStartPoint + 1, messageFinishPoint - messageStartPoint-1 );
+                    ErrorListApi errorListManagement = new ErrorListApi();
+                    errorListManagement.extendedErrorCode = errorCode;
+                    errorListManagement.defaultDescription = errorMessage;
+                    errorListManagements.Add(errorListManagement);
+                    Console.WriteLine(errorListManagement.extendedErrorCode + ":" + errorListManagement.defaultDescription);
+                }
+
 
         }
-
-
     }
 }
