@@ -27,9 +27,12 @@ namespace ErrorFinding
         {
             List<ErrorList> errorListUI = new List<ErrorList>();
 
-            string url = "https://raw.githubusercontent.com/xyztek/CrowdFundingUI/master/src/shared/language/english.json?token=GHSAT0AAAAAACFBXO3FWVRGBSAWWHWBLH2KZFP75BA";
+            string url = "https://raw.githubusercontent.com/xyztek/CrowdFundingUI/master/src/shared/language/english.json";
             using (WebClient client = new WebClient())
             {
+                client.Headers.Add("Authorization: token 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");
+                client.Headers.Add("Accept: application / vnd.github.v3.raw");
+                
                 var jsonData = client.DownloadString(url);
                 JObject jsonObject = JObject.Parse(jsonData);
 
