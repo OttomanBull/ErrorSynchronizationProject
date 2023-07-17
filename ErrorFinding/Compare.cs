@@ -8,12 +8,12 @@ namespace ErrorFinding
 {
     public class Compare
     {  
-        public void compareErrors(List<ErrorListApi> apiErrors, List<ErrorListApi> compareErrors)
+        public void compareErrors(List<ErrorList> apiErrors, List<ErrorList> compareErrors)
         {
             Console.WriteLine("managament'a  eklenecek errorlar");
-            foreach (ErrorListApi apiError in apiErrors.ToList()){
+            foreach (ErrorList apiError in apiErrors.ToList()){
                 bool found = false;
-                foreach (ErrorListApi compareError in compareErrors){   
+                foreach (ErrorList compareError in compareErrors){   
                     if (apiError.extendedErrorCode.Equals(compareError.extendedErrorCode)){  //api'daki error uı'da var
                         found = true;
                     }
@@ -21,7 +21,7 @@ namespace ErrorFinding
                     {}
                 }
                 if (!found){
-                    ErrorListApi newError = new ErrorListApi();
+                    ErrorList newError = new ErrorList();
                     newError.extendedErrorCode = apiError.extendedErrorCode;
                     newError.defaultDescription = apiError.defaultDescription;
                     compareErrors.Add(newError);
@@ -29,9 +29,9 @@ namespace ErrorFinding
                 }
             }
             Console.WriteLine("managament'dan çıkartılacak errorlar");
-            foreach (ErrorListApi compareError in compareErrors.ToList()){
+            foreach (ErrorList compareError in compareErrors.ToList()){
                 bool found = false;
-                foreach (ErrorListApi apiError in apiErrors){   //uı'daki error api'da var
+                foreach (ErrorList apiError in apiErrors){   //uı'daki error api'da var
                     if (compareError.extendedErrorCode.Equals(apiError.extendedErrorCode)){
                         found = true;
                     }
