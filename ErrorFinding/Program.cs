@@ -10,7 +10,7 @@ class Program
 {
     static void Main()
     {
-        ErrorSynchronization errorSynchronization = new ErrorSynchronization();
+        ErrorSynchronization errorSynchronization = new();
         errorSynchronization.ShowUpdateUIErrorList();
     }
 }

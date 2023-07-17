@@ -40,7 +40,6 @@ namespace ErrorFinding
             }
             return UpdateList;
 
-
         }
 
         //burası uygulamada olmayacak, sadece yaptığımız şeyler fiziksel olarak gözüksün diye yaptım
@@ -82,16 +81,21 @@ namespace ErrorFinding
 
             Console.WriteLine(errorLists.Count());
 
-            bool isEqual = errorListDal.GetErrorListApi()==(errorListDal.GetErrorListApi());
-            if(isEqual==true)
+            List <ErrorList> errorListUI = new List<ErrorList>();
+            List<ErrorList> errorListApi = new List<ErrorList>();
+            errorListUI = errorListDal.GetErrorListUI();
+            errorListApi = errorListDal.GetErrorListApi();
+
+            bool isEqual = errorListApi == errorLists;
+            if (isEqual == true)
             {
                 Console.WriteLine("Hata Kodları Eşitlendi");
             }
-            else if(isEqual==false)
+            else if (isEqual == false)
             {
                 Console.WriteLine("Hata Koları eşitlenemedi");
             }
-            else 
+            else
             {
                 Console.WriteLine("garip");
             };

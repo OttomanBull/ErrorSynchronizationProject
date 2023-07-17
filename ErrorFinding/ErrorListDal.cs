@@ -48,11 +48,9 @@ namespace ErrorFinding
                     errorListUI.Add(error);
                 }
             }
-
             return errorListUI;
         }
 
-      
         public void GetErrorListManagement(string path)
         {
             string allErrorText = File.ReadAllText(path);
@@ -79,7 +77,5 @@ namespace ErrorFinding
                 Console.WriteLine(errorCode + ":  " + errorMessage);
             }
         }
-
-      
     }
 }
