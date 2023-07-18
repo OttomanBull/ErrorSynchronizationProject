@@ -14,11 +14,12 @@ namespace ErrorFinding
             List<ErrorList> errorListApi = null;
 
             string url = "https://developmentapi.fonhub.xyzteknoloji.com/api/errorrecord/all";
-            using (WebClient webClient = new WebClient())
+            using (HttpClient webClient = new HttpClient())
             {
                 try
                 {
-                    string json = webClient.DownloadString(url);
+                    //string json = webClient.DownloadString(url);
+                    string json= webClient.GetStringAsync(url).Result;   
                     errorListApi = JsonConvert.DeserializeObject<List<ErrorList>>(json);
                 }
                 catch (Exception ex)
@@ -26,7 +27,6 @@ namespace ErrorFinding
                     Console.WriteLine("Hata oluştu: " + ex.Message);
                 }
             }
-
             return errorListApi ?? new List<ErrorList>();
         }
         public void GetErrorListUI()
@@ -56,12 +56,11 @@ namespace ErrorFinding
         {
             List<ErrorList> errorListManagement= new List<ErrorList>();    
             ReadUrl read =new ReadUrl();
-            read.readUrl(path, "C:/Users/Elif Aslan/Desktop/test.txt");
-                
-            string allErrorText = File.ReadAllText(@"C:/Users/Elif Aslan/Desktop/test.txt",Encoding.UTF8);    
+            string allErrorText = read.readUrl(path);
+            Console.Write(allErrorText);
+
             int startPoint = allErrorText.IndexOf("{");
             int finishPoint = allErrorText.LastIndexOf(",");
-
             string clearErrorText = allErrorText.Substring(startPoint + 1, finishPoint - startPoint - 1);
             int clearCharIndex= clearErrorText.LastIndexOf('\"');
             clearErrorText= clearErrorText.Remove(clearCharIndex);
@@ -77,8 +76,8 @@ namespace ErrorFinding
 
                 string errorMessage = errorTextTemp.Substring(codeFinishPoint + 1, errorTextTemp.Length - codeFinishPoint - 1);
                 string errorMessageCheck = errorMessage.Replace("\n", "").Replace(" ", "");
-                int messageStartPoint = 0;
-                int messageFinishPoint = 0;
+                int messageStartPoint;
+                int messageFinishPoint;
 
                 if (errorMessageCheck[0] == '\"')
                 {
@@ -97,12 +96,9 @@ namespace ErrorFinding
                 newError.extendedErrorCode = errorCode;
                 newError.defaultDescription = errorMessage;
                 errorListManagement.Add(newError);
-                Console.WriteLine(newError.extendedErrorCode + ":" + newError.defaultDescription);
+                //Console.WriteLine(newError.extendedErrorCode + ":" + newError.defaultDescription);
             }
             return errorListManagement ?? new List<ErrorList>();
-
-
-
         }
     }
 }
