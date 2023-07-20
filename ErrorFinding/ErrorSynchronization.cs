@@ -139,5 +139,9 @@ namespace ErrorFinding
 
         }
 
+        internal List<ErrorList> compareErrorsListVElif(List<ErrorList> errorLists1, List<ErrorList> errorLists2)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
