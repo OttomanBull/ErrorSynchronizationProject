@@ -31,7 +31,6 @@ namespace ErrorFinding
                 Byte[] content = new UTF8Encoding(true).GetBytes(errorText);
                 fs.Write(content, 0, content.Length);
             }
-
         }
 
         public void ToUiFile()
@@ -44,12 +43,6 @@ namespace ErrorFinding
             string json = JsonConvert.SerializeObject(errors, Formatting.Indented);
             //json formatına çevirme
 
-            /*
-             * 
-             * 
-             * */
-
-
             if (File.Exists(uiFolder))
             {
                 File.Delete(uiFolder);
@@ -60,10 +53,6 @@ namespace ErrorFinding
                 Byte[] content = new UTF8Encoding(true).GetBytes(json);
                 fs.Write(content, 0, content.Length);
             }
-
-
         }
-
-
     }
 }

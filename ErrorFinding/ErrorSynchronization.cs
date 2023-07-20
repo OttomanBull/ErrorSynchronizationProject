@@ -50,8 +50,6 @@ namespace ErrorFinding
                     {  //api'daki error uı'da var
                         found = true;
                     }
-                    else //management'da yok
-                    { }
                 }
                 if (!found)
                 {
@@ -72,8 +70,6 @@ namespace ErrorFinding
                     {
                         found = true;
                     }
-                    else //api'da yok
-                    { }
                 }
                 if (!found)
                 {
