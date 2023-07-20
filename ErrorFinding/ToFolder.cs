@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using Newtonsoft.Json;
+using System.Text;
 
 namespace ErrorFinding
 {
@@ -35,9 +36,12 @@ namespace ErrorFinding
 
         public void ToUiFile()
         {
-            string uiFolder = @"C:/Users/Elif Aslan/Desktop/error/ui.json";
-
-
+            ErrorSynchronization errorSynchronization = new ErrorSynchronization();
+            ErrorListDal errorListDal = new ErrorListDal();
+            string uiFolder = @"C:/Users/Work and Study/Desktop/errorui.json";
+            List<ErrorList> errors = new List<ErrorList>();
+            errors = errorSynchronization.ErrorCodeUpateVBahadir(errorListDal.GetErrorListApi(), errorListDal.GetErrorListUI());
+            string json = JsonConvert.SerializeObject(errors, Formatting.Indented);
             //json formatına çevirme
 
             /*
@@ -53,10 +57,8 @@ namespace ErrorFinding
 
             using (FileStream fs = File.Create(uiFolder))
             {
-                /*
-                 * 
-                 * 
-                 * */
+                Byte[] content = new UTF8Encoding(true).GetBytes(json);
+                fs.Write(content, 0, content.Length);
             }
 
 

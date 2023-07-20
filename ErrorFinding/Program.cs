@@ -12,6 +12,7 @@ class Program
     {
         ToFolder toFolder = new ToFolder();
         toFolder.ToManagementFile();
+        toFolder.ToUiFile();
     }
 }
 
