@@ -10,5 +10,6 @@ namespace ErrorFinding
     {
         public string extendedErrorCode { get; set; }
         public string defaultDescription { get; set; }
+
     }
 }

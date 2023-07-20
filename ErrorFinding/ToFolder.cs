@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
 
 namespace ErrorFinding
 {
@@ -11,8 +7,10 @@ namespace ErrorFinding
         public void ToManagementFile()
         {
             ErrorListDal errorList = new ErrorListDal();
-            List<ErrorList> listErrorManagement = errorList.GetErrorListManagement("https://raw.githubusercontent.com/xyztek/CrowdFundingManagement/master/src/lang/errorCodes/tr_TR.js");
+            ErrorSynchronization errorSynchronization = new ErrorSynchronization();
+            List<ErrorList> listErrorManagement = errorSynchronization.compareErrorsVElif(errorList.GetErrorListApi(),errorList.GetErrorListManagement("https://raw.githubusercontent.com/xyztek/CrowdFundingManagement/master/src/lang/errorCodes/tr_TR.js"));
 
+            string managementFolder = @"C:/Users/Elif Aslan/Desktop/error/management.js";
             string errorText = "module.exports = { \n";
 
             foreach(ErrorList error in listErrorManagement)
@@ -21,6 +19,49 @@ namespace ErrorFinding
             }
             errorText += "};";
             Console.WriteLine(errorText);
+
+            if (File.Exists(managementFolder))
+            {
+                File.Delete(managementFolder);
+            }
+
+            using (FileStream fs = File.Create(managementFolder))
+            {
+                Byte[] content = new UTF8Encoding(true).GetBytes(errorText);
+                fs.Write(content, 0, content.Length);
+            }
+
         }
+
+        public void ToUiFile()
+        {
+            string uiFolder = @"C:/Users/Elif Aslan/Desktop/error/ui.json";
+
+
+            //json formatına çevirme
+
+            /*
+             * 
+             * 
+             * */
+
+
+            if (File.Exists(uiFolder))
+            {
+                File.Delete(uiFolder);
+            }
+
+            using (FileStream fs = File.Create(uiFolder))
+            {
+                /*
+                 * 
+                 * 
+                 * */
+            }
+
+
+        }
+
+
     }
 }
