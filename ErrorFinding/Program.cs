@@ -10,8 +10,12 @@ class Program
 {
     static void Main()
     {
-        ErrorSynchronization errorSynchronization = new();
+        ErrorListDal errorListDal = new ErrorListDal();
+        var errorSynchronization = new ErrorSynchronization();
         errorSynchronization.ShowUpdateUIErrorList();
+        List<ErrorList> errors = new List<ErrorList>();
+        errors = errorSynchronization.ErrorCodeUpate(errorListDal.GetErrorListApi(), errorListDal.GetErrorListUI());
+        errorSynchronization.SaveToDesktop(errors);
     }
 }
 

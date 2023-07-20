@@ -8,8 +8,8 @@ namespace ErrorFinding
 {
     public interface IErrorList
     {
-        public string ExtendedErrorCode { get; set; }
-        public string DefaultDescription { get; set; }
+        public string extendedErrorCode { get; set; }
+        public string defaultDescription { get; set; }
 
     }
 }

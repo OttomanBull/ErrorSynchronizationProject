@@ -42,8 +42,8 @@ namespace ErrorFinding
                 {
                     ErrorList error = new ErrorList();
 
-                    error.ExtendedErrorCode = item.Name.ToString();
-                    error.DefaultDescription = item.Value.ToString();
+                    error.extendedErrorCode = item.Name.ToString();
+                    error.defaultDescription = item.Value.ToString();
 
                     errorListUI.Add(error);
                 }
@@ -51,31 +51,45 @@ namespace ErrorFinding
             return errorListUI;
         }
 
-        public void GetErrorListManagement(string path)
+        public List<ErrorList> GetErrorListManagement(string path)
         {
-            string allErrorText = File.ReadAllText(path);
-
-            int startPoint = allErrorText.IndexOf("{");
-            int finishPoint = allErrorText.LastIndexOf(",");
-
-            string clearErrorText = allErrorText.Substring(startPoint + 1, finishPoint - startPoint - 1);
-            string[] errorLine = clearErrorText.Split("\",");
-
-            foreach (string errorText in errorLine)
+            string errorText;
+            List<ErrorList> errorListManagement = new List<ErrorList>();
+            using (HttpClient wc = new HttpClient())
             {
-                string errorTextTemp = errorText;
-                errorTextTemp += '\"';
+                wc.DefaultRequestHeaders.Add("Authorization", "token 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");
+                wc.DefaultRequestHeaders.Add("Accept", "application / vnd.github.v3.raw");
+                errorText = wc.GetStringAsync(path).Result;
 
-                int codeFinishPoint = errorTextTemp.IndexOf(":");
-                string removeChar = " ";
-                string errorCode = errorTextTemp.Substring(0, codeFinishPoint - 1).Replace(removeChar, string.Empty);
+                int startPoint = errorText.IndexOf("{");
+                int finishPoint = errorText.LastIndexOf("\",") - 1;
+                errorText = errorText.Substring(startPoint + 1, finishPoint - startPoint).Replace("\'", "\"");
 
-                int messageStartPoint = errorTextTemp.IndexOf("\"");
-                int messageFinishPoint = errorTextTemp.LastIndexOf("\"");
+                string[] stringSeperator = new string[] { "\",", "\'," };
+                string[] errorLine = errorText.Split(stringSeperator, StringSplitOptions.None);
+                string finaleErrorText = "{\"errorCodes\": {\n";
 
-                string errorMessage = errorTextTemp.Substring(messageStartPoint + 1, messageFinishPoint - messageStartPoint - 1);
-                Console.WriteLine(errorCode + ":  " + errorMessage);
+                foreach (string line in errorLine)
+                {
+                    string demo = line.Trim();
+                    demo = demo.Substring(0, demo.IndexOf("\"")) + "\"" + demo.Substring(demo.IndexOf("\"") + 1, demo.Length - demo.IndexOf("\"") - 1).Replace("\"", "\'");
+                    demo = demo.Insert(0, "\"").Insert(demo.IndexOf(":") + 1, "\"").Insert(demo.Length + 2, "\",");
+                    finaleErrorText += demo + "\n";
+                }
+                finaleErrorText += "} }";
+
+                JObject jsonObject = JObject.Parse(finaleErrorText);
+                var result = jsonObject.SelectToken("errorCodes");
+
+                foreach (JProperty item in result.Children())
+                {
+                    ErrorList error = new ErrorList();
+                    error.extendedErrorCode = item.Name.ToString();
+                    error.defaultDescription = item.Value.ToString();
+                    errorListManagement.Add(error);
+                }
             }
+            return errorListManagement.ToList();
         }
     }
 }
