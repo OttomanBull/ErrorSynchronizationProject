@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System.Text;
 
 namespace ErrorFinding
@@ -7,7 +8,7 @@ namespace ErrorFinding
     {
         public void ToManagementFile()
         {
-            ErrorListDal errorList = new ErrorListDal();
+            ErrorListDalCollections errorList = new ErrorListDalCollections();
             ErrorSynchronization errorSynchronization = new ErrorSynchronization();
             List<ErrorList> listErrorManagement = errorSynchronization.compareErrorsVElif(errorList.GetErrorListApi(),errorList.GetErrorListManagement("https://raw.githubusercontent.com/xyztek/CrowdFundingManagement/master/src/lang/errorCodes/tr_TR.js"));
 
@@ -36,11 +37,11 @@ namespace ErrorFinding
         public void ToUiFile()
         {
             ErrorSynchronization errorSynchronization = new ErrorSynchronization();
-            ErrorListDal errorListDal = new ErrorListDal();
+            ErrorListDalJson errorListDalJson = new ErrorListDalJson();
             string uiFolder = @"C:/Users/Work and Study/Desktop/errorui.json";
-            List<ErrorList> errors = new List<ErrorList>();
-            errors = errorSynchronization.ErrorCodeUpateVBahadir(errorListDal.GetErrorListApi(), errorListDal.GetErrorListUI());
-            string json = JsonConvert.SerializeObject(errors, Formatting.Indented);
+
+            JArray errors = errorSynchronization.ErrorCodeUpateVBahadir((JArray)errorListDalJson.GetErrorListApiJson(), (JArray)errorListDalJson.GetErrorListUIJson());
+            JArray json = (JArray)JsonConvert.SerializeObject(errors, Formatting.Indented);
             //json formatına çevirme
 
             if (File.Exists(uiFolder))
@@ -50,7 +51,7 @@ namespace ErrorFinding
 
             using (FileStream fs = File.Create(uiFolder))
             {
-                Byte[] content = new UTF8Encoding(true).GetBytes(json);
+                Byte[] content = new UTF8Encoding(true).GetBytes((string)json);
                 fs.Write(content, 0, content.Length);
             }
         }

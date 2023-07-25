@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
@@ -14,28 +15,31 @@ namespace ErrorFinding
     public class ErrorSynchronization
     {
      
-        public IEnumerable<ErrorList> ErrorCodeComparisonVBahadir(IEnumerable<ErrorList> compareSource, IEnumerable<ErrorList> compareAgainst)
+        public JArray ErrorCodeComparisonVBahadir(JArray compareSource, JArray compareAgainst)
         {
-            return compareSource.ExceptBy(compareAgainst.Select(i => i.extendedErrorCode), errorList => errorList.extendedErrorCode);
+            return (JArray)compareSource.Except(compareAgainst);
         }
 
-        public List<ErrorList> ErrorCodeUpateVBahadir(IEnumerable<ErrorList> list1, IEnumerable<ErrorList> list2)
+        public JArray ErrorCodeUpateVBahadir(JArray list1, JArray list2)
         {
-            var willBeAddedUI = ErrorCodeComparisonVBahadir(list1, list2).ToList();
-            var ToBeRemovedUI = ErrorCodeComparisonVBahadir(list2, list1).ToList();
+            JArray willBeAddedUI = ErrorCodeComparisonVBahadir(list1, list2);
+            JArray ToBeRemovedUI = ErrorCodeComparisonVBahadir(list2, list1);
 
-            //var updateList = new List<ErrorList>();
-            List<ErrorList> updateList = list2.ToList();
+            // JToken nesneleri değiştirilemez olduğundan, bunları başka bir koleksiyona eklemek gerekebilir.
+            // Örneğin, JArray kullanarak değiştirilebilir bir koleksiyon oluşturabilirsiniz.
+            JArray updateList = new JArray(list2);
 
-            updateList.AddRange(willBeAddedUI);
-
-            foreach (var error in ToBeRemovedUI)
+            foreach (JArray token in willBeAddedUI)
             {
-                updateList.RemoveAll(e => e.extendedErrorCode == error.extendedErrorCode);
+                updateList.Add(token);
+            }
+
+            foreach (JArray token in ToBeRemovedUI)
+            {
+                updateList.Remove(token);
             }
 
             return updateList;
-
         }
 
         public List<ErrorList> compareErrorsVElif(List<ErrorList> apiErrors, List<ErrorList> compareErrors)

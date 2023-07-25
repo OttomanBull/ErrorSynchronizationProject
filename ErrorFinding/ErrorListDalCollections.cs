@@ -7,7 +7,7 @@ using System.Net;
 
 namespace ErrorFinding
 {
-    public class ErrorListDal
+    public class ErrorListDalCollections
     {
       
         public List<ErrorList> GetErrorListApi()
