@@ -11,9 +11,15 @@ class Program
 {
     static void Main()
     {
-        ToFolder toFolder = new ToFolder();
+        /*ToFolder toFolder = new ToFolder();
        // toFolder.ToManagementFile();
-        toFolder.ToUiFile();
+        toFolder.ToUiFile();*/
+
+        ErrorListDalJson errorListDalJson = new ErrorListDalJson();
+        JToken errorListUi = errorListDalJson.GetErrorListUIJson();
+        JToken errorListApi= errorListDalJson.GetErrorListApiJson();
+        ErrorSynchronization errorSynchronization = new ErrorSynchronization();
+        errorSynchronization.ErrorCodeUpateVBahadir(errorListApi,errorListUi);
      
        
 

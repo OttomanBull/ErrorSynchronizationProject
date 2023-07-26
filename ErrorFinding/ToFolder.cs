@@ -34,7 +34,7 @@ namespace ErrorFinding
             }
         }
 
-        public void ToUiFile()
+        /*public void ToUiFile()
         {
             ErrorSynchronization errorSynchronization = new ErrorSynchronization();
             ErrorListDalJson errorListDalJson = new ErrorListDalJson();
@@ -54,6 +54,6 @@ namespace ErrorFinding
                 Byte[] content = new UTF8Encoding(true).GetBytes((string)json);
                 fs.Write(content, 0, content.Length);
             }
-        }
+        }*/
     }
 }

@@ -14,75 +14,78 @@ namespace ErrorFinding
 
     public class ErrorSynchronization
     {
-     
-        public JArray ErrorCodeComparisonVBahadir(JArray compareSource, JArray compareAgainst)
+        public List<JToken> GetErrorWillBeAddedToUi()
         {
-            return (JArray)compareSource.Except(compareAgainst);
-        }
+            ErrorListDalJson errorListDal = new ErrorListDalJson();
+            List<JToken> apiErrorList = errorListDal.GetErrorListApi();
+            JToken errorListToCompare = errorListDal.GetErrorListUI();
+            List<JToken> willBeAdded = new List<JToken>();
+            Console.WriteLine(errorListToCompare.Count());
 
-        public JArray ErrorCodeUpateVBahadir(JArray list1, JArray list2)
-        {
-            JArray willBeAddedUI = ErrorCodeComparisonVBahadir(list1, list2);
-            JArray ToBeRemovedUI = ErrorCodeComparisonVBahadir(list2, list1);
-
-            // JToken nesneleri değiştirilemez olduğundan, bunları başka bir koleksiyona eklemek gerekebilir.
-            // Örneğin, JArray kullanarak değiştirilebilir bir koleksiyon oluşturabilirsiniz.
-            JArray updateList = new JArray(list2);
-
-            foreach (JArray token in willBeAddedUI)
+            foreach (JToken apiError in apiErrorList.Children())
             {
-                updateList.Add(token);
-            }
-
-            foreach (JArray token in ToBeRemovedUI)
-            {
-                updateList.Remove(token);
-            }
-
-            return updateList;
-        }
-
-        public List<ErrorList> compareErrorsVElif(List<ErrorList> apiErrors, List<ErrorList> compareErrors)
-        {
-            Console.WriteLine("managament'a  eklenecek errorlar");
-            foreach (ErrorList apiError in apiErrors.ToList())
-            {
+                JProperty errorProperty = apiError as JProperty;
                 bool found = false;
-                foreach (ErrorList compareError in compareErrors)
+                string description = "";
+                if (errorProperty.Name == "defaultDescription")
                 {
-                    if (apiError.extendedErrorCode.Equals(compareError.extendedErrorCode))
-                    {  //api'daki error uı'da var
-                        found = true;
-                    }
+                    description = errorProperty.Value.ToString();
                 }
-                if (!found)
+                if (errorProperty.Name == "extendedErrorCode")
                 {
-                    ErrorList newError = new ErrorList();
-                    newError.extendedErrorCode = apiError.extendedErrorCode;
-                    newError.defaultDescription = apiError.defaultDescription;
-                    compareErrors.Add(newError);
-                    Console.WriteLine(apiError.extendedErrorCode);
-                }
-            }
-            Console.WriteLine("managament'dan çıkartılacak errorlar");
-            foreach (ErrorList compareError in compareErrors.ToList())
-            {
-                bool found = false;
-                foreach (ErrorList apiError in apiErrors)
-                {   //uı'daki error api'da var
-                    if (compareError.extendedErrorCode.Equals(apiError.extendedErrorCode))
+                    foreach (JToken errorToCompare in errorListToCompare)
                     {
-                        found = true;
+                        JProperty errorToCompareProperty = errorToCompare as JProperty;
+
+                        if (errorProperty.Value.ToString().Equals(errorToCompareProperty.Name.ToString()))
+                        {
+                            found = true;
+                        }
+                    }
+                    if (!found)//eklenecek
+                    {
+                        willBeAdded.Add(apiError);
+                        JObject errorObject = errorListToCompare as JObject;
+                        errorObject["errorCodes"][errorProperty.Name] = JObject.Parse(description);
                     }
                 }
-                if (!found)
+            }
+            Console.WriteLine(errorListToCompare.Count());
+
+            return willBeAdded;
+        }
+
+        public List<JToken> GetWillBeRemovedFromUi()
+        {
+            ErrorListDalJson errorListDal = new ErrorListDalJson();
+            List<JToken> apiErrorList = errorListDal.GetErrorListApi();
+            JToken errorListToCompare = errorListDal.GetErrorListUI();
+            List<JToken> willBeRemoved = new List<JToken>();
+
+            bool found = false;
+
+            foreach (JToken errorToCompare in errorListToCompare)
+            {
+                JProperty errorToCompareProperty = errorToCompare as JProperty;
+
+                foreach (JToken apiError in apiErrorList.Children())
                 {
-                    compareErrors.Remove(compareError);
-                    Console.WriteLine(compareError.extendedErrorCode);
+                    JProperty apiErrorProperty = apiError as JProperty;
+                    if (apiErrorProperty.Name == "extendedErrorCode")
+                    {
+                        if (apiErrorProperty.Value.ToString().Equals(errorToCompareProperty.Name.ToString()))
+                        {
+                            found = true;
+                        }
+                    }
+                }
+                if (!found)//silinecek
+                {
+                    willBeRemoved.Add(errorToCompare);
                 }
             }
 
-            return compareErrors;
+            return willBeRemoved;
         }
     }
 }
