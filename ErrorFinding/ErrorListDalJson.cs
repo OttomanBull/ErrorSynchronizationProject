@@ -35,8 +35,8 @@ namespace ErrorFinding
 
                 var jsonData = client.DownloadString(url);
                 JToken errorListUi = JToken.Parse(jsonData);
-                JToken result = errorListUi.SelectToken("errorCodes");
-                return result;
+
+                return errorListUi;
             }
 
         }

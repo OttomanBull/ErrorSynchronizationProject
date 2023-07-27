@@ -6,7 +6,7 @@ namespace ErrorFinding
 {
     public class ToFolder
     {
-        public void ToManagementFile()
+        /*public void ToManagementFile()
         {
             ErrorListDalCollections errorList = new ErrorListDalCollections();
             ErrorSynchronization errorSynchronization = new ErrorSynchronization();
@@ -32,7 +32,7 @@ namespace ErrorFinding
                 Byte[] content = new UTF8Encoding(true).GetBytes(errorText);
                 fs.Write(content, 0, content.Length);
             }
-        }
+        }*/
 
         /*public void ToUiFile()
         {
