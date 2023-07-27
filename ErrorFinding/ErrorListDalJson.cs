@@ -21,6 +21,9 @@ namespace ErrorFinding
                 string json = hc.GetStringAsync(url).Result;
                 List<JToken> errorListApi = JsonConvert.DeserializeObject<List<JToken>>(json);
 
+                //errorListApi.Remove(errorListApi[1]);
+
+
                 return errorListApi;
             }
         }
@@ -36,6 +39,7 @@ namespace ErrorFinding
                 var jsonData = client.DownloadString(url);
                 JToken errorListUi = JToken.Parse(jsonData);
 
+             
                 return errorListUi;
             }
 

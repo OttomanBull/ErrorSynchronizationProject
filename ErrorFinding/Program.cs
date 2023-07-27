@@ -13,7 +13,9 @@ class Program
     {
 
         ErrorSynchronization errorSynchronization = new ErrorSynchronization();
-        errorSynchronization.AddErrorToJson();
+        JToken UpdatedErrorListUi= errorSynchronization.RemoveErrorFromJson();
+
+
      
        
 

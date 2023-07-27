@@ -28,11 +28,7 @@ namespace ErrorFinding
                 JProperty apiErrorProperty = apiError as JProperty;
 
                 bool found = false;
-                string description = "";
-                if (apiErrorProperty.Name == "defaultDescription")
-                {
-                    description = apiErrorProperty.Value.ToString();
-                }
+
                 if (apiErrorProperty.Name == "extendedErrorCode")
                 {
                     foreach (JToken errorToCompare in errorListToCompare)
@@ -59,7 +55,8 @@ namespace ErrorFinding
         {
             ErrorListDalJson errorListDal = new ErrorListDalJson();
             List<JToken> apiErrorList = errorListDal.GetErrorListApi();
-            JToken errorListToCompare = errorListDal.GetErrorListUI();
+            JToken result = errorListDal.GetErrorListUI();//tüm ui
+            JToken errorListToCompare = result.SelectToken("errorCodes");
             List<JToken> willBeRemoved = new List<JToken>();
 
             bool found = false;
@@ -70,24 +67,30 @@ namespace ErrorFinding
 
                 foreach (JToken apiError in apiErrorList.Children())
                 {
-                    JProperty apiErrorProperty = apiError as JProperty;
+                    /*JProperty apiErrorProperty = apiError as JProperty;
                     if (apiErrorProperty.Name == "extendedErrorCode")
                     {
                         if (apiErrorProperty.Value.ToString().Equals(errorToCompareProperty.Name.ToString()))
                         {
                             found = true;
                         }
-                    }
+                    }*/
+                    Console.WriteLine(apiError);
+
+                    /*if ((string)apiError.SelectToken("extendedErrorCode").Equals(errorToCompareProperty.Name.ToString()){
+
+                    }*/
                 }
                 if (!found)//silinecek
                 {
                     willBeRemoved.Add(errorToCompare);
+                    Console.WriteLine(errorToCompareProperty.Name);   
                 }
             }
             return willBeRemoved;
         }
 
-        public void AddErrorToJson()
+        public JToken AddErrorToJson()
         {
             ErrorListDalJson errorListDalJson = new ErrorListDalJson();
             JToken errorListUi=errorListDalJson.GetErrorListUI();
@@ -100,19 +103,23 @@ namespace ErrorFinding
                 string description =(string) error.Parent.SelectToken("defaultDescription");
                 errorObject["errorCodes"][errorProp.Value.ToString()] =description;
             }
-            Console.WriteLine(errorListUi);
+            return errorListUi;
         }
 
-        /*public void RemoveErrorFromJson()
+        public JToken RemoveErrorFromJson()
         {
-            ErrorListDalJson errorListDalJson = new ErrorListDalJson();
-            JToken errorListUi = errorListDalJson.GetErrorListUI();
-            List<JToken> errorListWillBeRemoved = GetWillBeRemovedFromUi();
+            JToken errorListUi = AddErrorToJson();
+            List<JToken> errorListWillBeRemove = GetWillBeRemovedFromUi();
+            JToken errorCodes = errorListUi.SelectToken("errorCodes");
 
-            foreach(JToken error in errorListWillBeRemoved)
+            JObject errorObject = errorCodes as JObject;
+
+            foreach (JToken error in errorListWillBeRemove)
             {
-
+                JProperty jProperty= error as JProperty;
+                errorObject.Property(jProperty.Name).Remove();
             }
-        }*/
+            return errorListUi;
+        }
     }
 }
