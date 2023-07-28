@@ -14,14 +14,10 @@ namespace ErrorFinding
 
     public class ErrorSynchronization
     {
-        public List<JToken> GetErrorWillBeAddedToUi()
+        public List<JToken> GetErrorWillBeAdded(List<JToken> apiErrorList,JToken toCompare)
         {
-            ErrorListDalJson errorListDal = new ErrorListDalJson();
-            List<JToken> apiErrorList = errorListDal.GetErrorListApi();
-            JToken result = errorListDal.GetErrorListUI();
-            JToken errorListToCompare = result.SelectToken("errorCodes");
+            JToken errorListToCompare = toCompare.SelectToken("errorCodes");
             List<JToken> willBeAdded = new List<JToken>();
-            Console.WriteLine(errorListToCompare.Count());
 
             foreach (JToken apiError in apiErrorList.Children())
             {
@@ -46,17 +42,13 @@ namespace ErrorFinding
                     }
                 }
             }
-            Console.WriteLine(errorListToCompare.Count());
 
             return willBeAdded;
         }
 
-        public List<JToken> GetWillBeRemovedFromUi()
+        public List<JToken> GetWillBeRemovedFromUi(List<JToken> apiErrorList, JToken toCompare)
         {
-            ErrorListDalJson errorListDal = new ErrorListDalJson();
-            List<JToken> apiErrorList = errorListDal.GetErrorListApi();
-            JToken result = errorListDal.GetErrorListUI();//tüm ui
-            JToken errorListToCompare = result.SelectToken("errorCodes");
+            JToken errorListToCompare = toCompare.SelectToken("errorCodes");
             List<JToken> willBeRemoved = new List<JToken>();
 
             bool found = false;
@@ -67,49 +59,42 @@ namespace ErrorFinding
 
                 foreach (JToken apiError in apiErrorList.Children())
                 {
-                    /*JProperty apiErrorProperty = apiError as JProperty;
+                    JProperty apiErrorProperty = apiError as JProperty;
                     if (apiErrorProperty.Name == "extendedErrorCode")
                     {
                         if (apiErrorProperty.Value.ToString().Equals(errorToCompareProperty.Name.ToString()))
                         {
                             found = true;
                         }
-                    }*/
-                    Console.WriteLine(apiError);
-
-                    /*if ((string)apiError.SelectToken("extendedErrorCode").Equals(errorToCompareProperty.Name.ToString()){
-
-                    }*/
+                    }
                 }
                 if (!found)//silinecek
                 {
                     willBeRemoved.Add(errorToCompare);
-                    Console.WriteLine(errorToCompareProperty.Name);   
                 }
             }
             return willBeRemoved;
         }
 
-        public JToken AddErrorToJson()
+
+        public JToken AddErrorToJson(List<JToken> apiErrorList, JToken toCompare)
         {
-            ErrorListDalJson errorListDalJson = new ErrorListDalJson();
-            JToken errorListUi=errorListDalJson.GetErrorListUI();
-            List<JToken> errorListWillBeAdded = GetErrorWillBeAddedToUi();
+            List<JToken> errorListWillBeAdded = GetErrorWillBeAdded(apiErrorList, toCompare);
             
             foreach(JToken error in errorListWillBeAdded)
             {
-                JObject errorObject = errorListUi as JObject;
+                JObject errorObject = toCompare as JObject;
                 JProperty errorProp= error as JProperty;
                 string description =(string) error.Parent.SelectToken("defaultDescription");
                 errorObject["errorCodes"][errorProp.Value.ToString()] =description;
             }
-            return errorListUi;
+            return toCompare;
         }
 
-        public JToken RemoveErrorFromJson()
+        public JToken RemoveErrorFromJson(List<JToken> apiErrorList, JToken toCompare)
         {
-            JToken errorListUi = AddErrorToJson();
-            List<JToken> errorListWillBeRemove = GetWillBeRemovedFromUi();
+            JToken errorListUi = AddErrorToJson(apiErrorList,toCompare);
+            List<JToken> errorListWillBeRemove = GetWillBeRemovedFromUi(apiErrorList, toCompare);
             JToken errorCodes = errorListUi.SelectToken("errorCodes");
 
             JObject errorObject = errorCodes as JObject;
@@ -119,7 +104,9 @@ namespace ErrorFinding
                 JProperty jProperty= error as JProperty;
                 errorObject.Property(jProperty.Name).Remove();
             }
+
             return errorListUi;
         }
+
     }
 }
