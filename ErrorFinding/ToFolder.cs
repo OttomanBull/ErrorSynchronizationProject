@@ -18,7 +18,7 @@ namespace ErrorFinding
             foreach (var error in errorListToCompare)
             {
                 JProperty errorProp= error as JProperty;
-                errorText += $"{errorProp.Name}: \"{errorProp.Value.ToString()}\",\n";
+                errorText += $"{errorProp.Name}: \"{errorProp.Value}\",\n";
             }
             int lastComma= errorText.LastIndexOf(',');
             errorText=errorText.Remove(lastComma);

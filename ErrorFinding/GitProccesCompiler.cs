@@ -17,11 +17,14 @@ namespace ErrorFinding
             {
                 powershell.AddScript($"cd {directory}");
 
-                if (File.Exists(Path.Combine(directory, fileName)))
+                if (!File.Exists(Path.Combine(directory, fileName)))
                     powershell.AddScript($"git clone {githubSSHURL}");
 
                 powershell.AddScript(@"git checkout bahadirv3");
+                
                 powershell.AddScript(@"git pull");
+
+
                 powershell.AddScript($"git checkout -b {lastName}");
 
                 Collection<PSObject> results = powershell.Invoke();
