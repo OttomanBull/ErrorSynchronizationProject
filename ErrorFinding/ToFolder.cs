@@ -73,7 +73,7 @@ namespace ErrorFinding
         static void WriteDataToJSFile(string filePath, string jsData)
         {
             File.WriteAllText(filePath, jsData);
-           
+            Console.WriteLine("");
         }
     }
 }
