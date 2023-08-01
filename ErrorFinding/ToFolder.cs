@@ -6,7 +6,7 @@ namespace ErrorFinding
 {
     public class ToFolder
     {
-        public string ToManagementFile(string url)
+        public string ManagementFileProcces(string url)
         {
             ErrorListDalJson errorListDalJson = new ErrorListDalJson();
             ErrorSynchronization errorSynchronization = new ErrorSynchronization();
@@ -18,7 +18,7 @@ namespace ErrorFinding
             foreach (var error in errorListToCompare)
             {
                 JProperty errorProp= error as JProperty;
-                errorText += $"{errorProp.Name}: \"{errorProp.Value}\",\n";
+                errorText += $"{errorProp.Name}: \"{errorProp.Value.ToString()}\",\n";
             }
             int lastComma= errorText.LastIndexOf(',');
             errorText=errorText.Remove(lastComma);
@@ -28,7 +28,7 @@ namespace ErrorFinding
 
         }
 
-        public JToken toUi(string url)
+        public JToken UIFileProcces(string url)
         {
             ErrorListDalJson errorListDalJson = new ErrorListDalJson();
             ErrorSynchronization errorSynchronization = new ErrorSynchronization();
@@ -38,6 +38,41 @@ namespace ErrorFinding
             JToken finaleErrorListUi = errorSynchronization.RemoveErrorFromJson(errorListDalJson.GetErrorListApi(), addedErrorList);
             
             return finaleErrorListUi;
+        }
+
+        public void ChangeJsonFile()
+        {
+            JToken uiJson = UIFileProcces("https://raw.githubusercontent.com/OttomanBull/ErrorSynchronizationProject/Bahad%C4%B1r/ErrorFinding/ErrorLists/UIEn.json");
+            string filePathUI = @"C:\Users\Work and Study\Documents\GitHub\ErrorSynchronizationProject\ErrorFinding\ErrorLists\UIEn.json";
+            ClearFile(filePathUI);
+            WriteListToJsonFile(filePathUI, uiJson);
+
+        }
+
+        public void ChangeJsFile()
+        {
+            string managementText = ManagementFileProcces("https://raw.githubusercontent.com/OttomanBull/ErrorSynchronizationProject/Bahad%C4%B1r/ErrorFinding/ErrorLists/ManEn.js");
+            string filePathMan = @"C:\Users\Work and Study\Documents\GitHub\ErrorSynchronizationProject\ErrorFinding\ErrorLists\ManEn.js";
+            ClearFile(filePathMan);
+            WriteDataToJSFile(filePathMan, managementText);
+        }
+
+
+
+        static void ClearFile(string filePath)
+        {
+            File.WriteAllText(filePath, string.Empty);
+        }
+
+        static void WriteListToJsonFile(string filePath, JToken dataList)
+        {
+            string json = JsonConvert.SerializeObject(dataList, Formatting.Indented);
+            File.WriteAllText(filePath, json);
+        }
+
+        static void WriteDataToJSFile(string filePath, string jsData)
+        {
+            File.WriteAllText(filePath, jsData);
         }
     }
 }
