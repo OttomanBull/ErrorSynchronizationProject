@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.IO;
 using System.Management.Automation;
 
@@ -19,9 +18,9 @@ namespace ErrorFinding
                 powershell.AddScript($"cd {directory}");
 
                 if (!File.Exists(Path.Combine(directory, fileName)))
-                    powershell.AddScript($"git clone {githubSSHURL}");
+                powershell.AddScript($"git clone {githubSSHURL}");
 
-                powershell.AddScript(@"git checkout BahadirBranch");
+                powershell.AddScript(@"git checkout Bahadır");
                 
                 powershell.AddScript(@"git pull");
 
@@ -41,7 +40,6 @@ namespace ErrorFinding
 
             PowerShellGitOperations(directory, fileName);
         }
-
         public void GitPushOperation()
         {
             string name = "Bahadır";
@@ -49,11 +47,11 @@ namespace ErrorFinding
             string lastName = name + dateTime;
             using (PowerShell powershell = PowerShell.Create())
             {
-                powershell.AddScript(@"git commit -m ‘Error Code İşlemleri Yapıldı’ ");
+                powershell.AddScript(@"git add .");
+                powershell.AddScript(@"git commit -m ‘git Error Code İşlemleri Yapıldı’ ");
                 powershell.AddScript($"git push origin {lastName} ");
                 powershell.AddScript($"git merge BahadirBranch ");
             }
         }
-
     }
 }
