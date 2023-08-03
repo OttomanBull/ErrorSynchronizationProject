@@ -18,6 +18,7 @@ class Program
         toFolder.ChangeUIFile();
         // gitProccesCompiler.GitPushOperation();
         Console.WriteLine("test");
+        Console.WriteLine("test2");
     }
 }
 
