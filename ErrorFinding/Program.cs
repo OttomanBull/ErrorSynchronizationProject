@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using ErrorFinding;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -14,15 +15,13 @@ class Program
         GitProccesCompiler gitProccesCompiler = new();   
         ToFolder toFolder = new();
         gitProccesCompiler.GitPullOperation();
-        toFolder.ChangeManagementFile();
+       // toFolder.ChangeManagementFile();
         toFolder.ChangeUIFile();
         gitProccesCompiler.GitPushOperation();
-        Console.WriteLine("test");
-        Console.WriteLine("test2");
-        Console.WriteLine("test3");
-        Console.WriteLine("test4");
-        Console.WriteLine("test5");
-        Console.WriteLine("test6");
+
+        var configuration = new ConfigurationBuilder()
+          .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+          .Build();
     }
 }
 

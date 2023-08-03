@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Text;
 
@@ -18,7 +19,7 @@ namespace ErrorFinding
             foreach (var error in errorListToCompare)
             {
                 JProperty errorProp= error as JProperty;
-                errorText += $"{errorProp.Name}: \"{errorProp.Value.ToString()}\",\n";
+                errorText += $"{errorProp.Name}: \"{errorProp.Value}\",\n";
             }
             int lastComma= errorText.LastIndexOf(',');
             errorText=errorText.Remove(lastComma);
@@ -42,8 +43,9 @@ namespace ErrorFinding
 
         public void ChangeUIFile()
         {
-            JToken uiJson = UIFileProcces("https://raw.githubusercontent.com/OttomanBull/ErrorSynchronizationProject/BahadirBranch/ErrorFinding/ErrorLists/UIEn.json");
-            string filePathUI = @"C:\Users\Work and Study\Documents\GitHub\ErrorSynchronizationProject\ErrorFinding\ErrorLists\UIEn.json";
+            var configuration = new ConfigurationBuilder().AddJsonFile("appSettings.json", false, true).Build();
+            JToken uiJson = UIFileProcces(configuration.GetSection("url:UiEnUrl").Value);
+            string filePathUI = @"C:\Users\Work and Study\Documents\GitHub\CrowdFundingUI-master\src\shared\language\english.json";
             ClearFile(filePathUI);
             WriteListToJsonFile(filePathUI, uiJson);
 
@@ -51,8 +53,9 @@ namespace ErrorFinding
 
         public void ChangeManagementFile()
         {
-            string managementText = ManagementFileProcces("https://raw.githubusercontent.com/OttomanBull/ErrorSynchronizationProject/BahadirBranch/ErrorFinding/ErrorLists/ManEn.js");
-            string filePathMan = @"C:\Users\Work and Study\Documents\GitHub\ErrorSynchronizationProject\ErrorFinding\ErrorLists\ManEn.js";
+            var configuration = new ConfigurationBuilder().AddJsonFile("appSettings.json", false, true).Build();
+            string managementText = ManagementFileProcces(configuration.GetSection("url:ManagementEnUrl").Value);
+            string filePathMan = configuration.GetSection(@"Directory:ManagamentDirectory").Value;
             ClearFile(filePathMan);
             WriteDataToJSFile(filePathMan, managementText);
         }

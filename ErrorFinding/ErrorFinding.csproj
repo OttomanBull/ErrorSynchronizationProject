@@ -9,6 +9,8 @@
   <ItemGroup>
     <PackageReference Include="Cake.Powershell" Version="3.0.0" />
     <PackageReference Include="Google.Apis.Translate.v2" Version="1.61.0.875" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="7.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
 

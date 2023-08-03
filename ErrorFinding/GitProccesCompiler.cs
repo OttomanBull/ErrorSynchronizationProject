@@ -1,54 +1,55 @@
-﻿using System.Collections.ObjectModel;
+﻿using Microsoft.Extensions.Configuration;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Management.Automation;
+using System.Threading;
 
 namespace ErrorFinding
 {
     public class GitProccesCompiler
     {
-        private void PowerShellGitOperations(string directory, string fileName)
+        private void PowerShellGitOperations(string directory,string gitHubSSHURl)
         {
-            string name = "Bahadir";
-            int dateTime = 1;
-            string lastName = name + dateTime;
-            string githubSSHURL = "git@github.com:OttomanBull/ErrorSynchronizationProject.git";
+           
+            string githubSSHURL = gitHubSSHURl;
 
             using (PowerShell powershell = PowerShell.Create())
             {
                 powershell.AddScript($"cd {directory}");
 
-                if (!File.Exists(Path.Combine(directory, fileName)))
+                if (!File.Exists(Path.Combine(directory+ "\\jsconfig.json")))
                 powershell.AddScript($"git clone {githubSSHURL}");
 
-                powershell.AddScript(@"git checkout BahadirBranch");
+                powershell.AddScript(@"git checkout master");
                 
                 powershell.AddScript(@"git pull");
 
 
-                powershell.AddScript($"git checkout -b Bahadir1");
+                powershell.AddScript($"git checkout -b ErrorTestv1");
 
                 Collection<PSObject> results = powershell.Invoke();
 
-                dateTime++;
+             
             }
         }
         public void GitPullOperation() 
         {
-            string fileName =  @"ErrorFinding.sln";
-            string directory = @"C:\Users\Work and Study\Documents\GitHub\ErrorSynchronizationProject";
+            var configuration = new ConfigurationBuilder().AddJsonFile("appSettings.json", false, true).Build();
 
-            PowerShellGitOperations(directory, fileName);
+            string directory = @"C:\Users\Work and Study\Documents\GitHub\CrowdFundingUI-master";
+            string gitHubSSHURL = configuration.GetSection("url:UiEnUrl").Value;
+            PowerShellGitOperations(directory, gitHubSSHURL);
         }
         public void GitPushOperation()
         {
-            string name = "Bahadir";
-            int dateTime = 1;
-            string lastName = name + dateTime;
+           
             using (PowerShell powershell = PowerShell.Create())
             {
               
                 powershell.AddScript(@"git commit -a -m ‘git Error Code İşlemleri Yapıldı v2’ ");
-                powershell.AddScript(@"git push origin Bahadir1 ");
+                Thread.Sleep(15000);
+                powershell.AddScript(@"git push origin ErrorTestv1 ");
+                Thread.Sleep(15000);
             }
         }
     }
