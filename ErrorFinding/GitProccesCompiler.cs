@@ -25,7 +25,7 @@ namespace ErrorFinding
                 powershell.AddScript(@"git pull");
 
 
-                powershell.AddScript($"git checkout -b {lastName}");
+                powershell.AddScript($"git checkout -b Bahadir1");
 
                 Collection<PSObject> results = powershell.Invoke();
 
@@ -48,7 +48,7 @@ namespace ErrorFinding
             {
               
                 powershell.AddScript(@"git commit -a -m ‘git Error Code İşlemleri Yapıldı v2’ ");
-                powershell.AddScript($"git push origin {lastName} ");
+                powershell.AddScript($"git push origin Bahadir1 ");
             }
         }
     }
