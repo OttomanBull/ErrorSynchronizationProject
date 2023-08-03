@@ -13,16 +13,10 @@ class Program
     {
         GitProccesCompiler gitProccesCompiler = new();   
         ToFolder toFolder = new();
-        gitProccesCompiler.WhileStarting();
+        gitProccesCompiler.GitPullOperation();
         toFolder.ChangeManagementFile();
         toFolder.ChangeUIFile();
-      
-       
-
-
     }
-  
-
 }
 
 

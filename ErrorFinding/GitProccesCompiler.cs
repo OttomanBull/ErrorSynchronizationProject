@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Management.Automation;
 
@@ -20,7 +21,7 @@ namespace ErrorFinding
                 if (!File.Exists(Path.Combine(directory, fileName)))
                     powershell.AddScript($"git clone {githubSSHURL}");
 
-                powershell.AddScript(@"git checkout Bahadır");
+                powershell.AddScript(@"git checkout BahadirBranch");
                 
                 powershell.AddScript(@"git pull");
 
@@ -33,7 +34,7 @@ namespace ErrorFinding
             }
         }
 
-        public void WhileStarting() 
+        public void GitPullOperation() 
         {
             string fileName =  @"ErrorFinding.sln";
             string directory = @"C:\Users\Work and Study\Documents\GitHub\ErrorSynchronizationProject";
@@ -41,8 +42,18 @@ namespace ErrorFinding
             PowerShellGitOperations(directory, fileName);
         }
 
-        
-        
-        
+        public void GitPushOperation()
+        {
+            string name = "Bahadır";
+            int dateTime = 1;
+            string lastName = name + dateTime;
+            using (PowerShell powershell = PowerShell.Create())
+            {
+                powershell.AddScript(@"git commit -m ‘Error Code İşlemleri Yapıldı’ ");
+                powershell.AddScript($"git push origin {lastName} ");
+                powershell.AddScript($"git merge BahadirBranch ");
+            }
+        }
+
     }
 }
