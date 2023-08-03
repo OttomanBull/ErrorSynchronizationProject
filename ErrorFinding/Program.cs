@@ -19,6 +19,8 @@ class Program
         gitProccesCompiler.GitPushOperation();
         Console.WriteLine("test");
         Console.WriteLine("test2");
+        Console.WriteLine("test3");
+        Console.WriteLine("test4");
     }
 }
 
