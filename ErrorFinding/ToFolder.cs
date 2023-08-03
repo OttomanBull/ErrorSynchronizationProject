@@ -42,7 +42,7 @@ namespace ErrorFinding
 
         public void ChangeUIFile()
         {
-            JToken uiJson = UIFileProcces("https://raw.githubusercontent.com/OttomanBull/ErrorSynchronizationProject/Bahad%C4%B1r/ErrorFinding/ErrorLists/UIEn.json");
+            JToken uiJson = UIFileProcces("https://raw.githubusercontent.com/OttomanBull/ErrorSynchronizationProject/BahadirBranch/ErrorFinding/ErrorLists/UIEn.json");
             string filePathUI = @"C:\Users\Work and Study\Documents\GitHub\ErrorSynchronizationProject\ErrorFinding\ErrorLists\UIEn.json";
             ClearFile(filePathUI);
             WriteListToJsonFile(filePathUI, uiJson);
@@ -51,7 +51,7 @@ namespace ErrorFinding
 
         public void ChangeManagementFile()
         {
-            string managementText = ManagementFileProcces("https://raw.githubusercontent.com/OttomanBull/ErrorSynchronizationProject/Bahad%C4%B1r/ErrorFinding/ErrorLists/ManEn.js");
+            string managementText = ManagementFileProcces("https://raw.githubusercontent.com/OttomanBull/ErrorSynchronizationProject/BahadirBranch/ErrorFinding/ErrorLists/ManEn.js");
             string filePathMan = @"C:\Users\Work and Study\Documents\GitHub\ErrorSynchronizationProject\ErrorFinding\ErrorLists\ManEn.js";
             ClearFile(filePathMan);
             WriteDataToJSFile(filePathMan, managementText);

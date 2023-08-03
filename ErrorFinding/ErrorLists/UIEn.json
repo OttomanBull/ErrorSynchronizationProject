@@ -196,16 +196,7 @@
     "Nvi2": "The ID information you have provided is invalid. Please check the information you have provided."
   },
   "errorCodes": {
-    "Api_UnhandledException": "Uncaught exception! See inner errors for details, if any.",
-    "Api_InputModelValidation": "Input model validating error! See inner errors for details, if any.",
-    "Api_CommonApi_Upload_EmptyStream": "Uploaded stream is empty!",
-    "Api_CommonApi_Upload_EmptyFile": "Uploaded file is empty!",
-    "Api_RestCallsPrevented": "All end-points calls are prevented!",
-    "Api_SwaggerAccessForbidden": "Swagger access is forbidden!",
-    "Api_HangfireAccessForbidden": "Hangfire erişimi engellendi!",
-    "Api_UnsupportedApiVersion": "Requested API version is not supported!",
-    "Core_Authentication_TokenExpired": "Provided authentication token is expired!",
-    "Core_Authentication_CorruptedSignKey": "Provided token encryption key differs from server encryption key!",
+   
     "Core_Authentication_RefreshNotAllowed": "Authentication token refresh is not allowed!",
     "Core_Cancellation_OperationCancelled": "Operation is cancelled by caller!",
     "Core_Cancellation_OperationTimeOut": "Operation is timed-out!",
