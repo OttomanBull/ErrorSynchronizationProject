@@ -16,8 +16,8 @@ class Program
         //gitProccesCompiler.GitPullOperation();
         toFolder.ChangeManagementFile();
         toFolder.ChangeUIFile();
-       // gitProccesCompiler.GitPushOperation();
-
+        // gitProccesCompiler.GitPushOperation();
+        Console.WriteLine("test");
     }
 }
 

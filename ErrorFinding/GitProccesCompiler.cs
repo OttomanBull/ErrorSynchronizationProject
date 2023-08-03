@@ -8,7 +8,7 @@ namespace ErrorFinding
     {
         private void PowerShellGitOperations(string directory, string fileName)
         {
-            string name = "Bahadır";
+            string name = "Bahadir";
             int dateTime = 1;
             string lastName = name + dateTime;
             string githubSSHURL = "git@github.com:OttomanBull/ErrorSynchronizationProject.git";
@@ -20,7 +20,7 @@ namespace ErrorFinding
                 if (!File.Exists(Path.Combine(directory, fileName)))
                 powershell.AddScript($"git clone {githubSSHURL}");
 
-                powershell.AddScript(@"git checkout Bahadır");
+                powershell.AddScript(@"git checkout BahadirBranch");
                 
                 powershell.AddScript(@"git pull");
 
@@ -32,7 +32,6 @@ namespace ErrorFinding
                 dateTime++;
             }
         }
-
         public void GitPullOperation() 
         {
             string fileName =  @"ErrorFinding.sln";
@@ -42,15 +41,14 @@ namespace ErrorFinding
         }
         public void GitPushOperation()
         {
-            string name = "Bahadır";
+            string name = "Bahadir";
             int dateTime = 1;
             string lastName = name + dateTime;
             using (PowerShell powershell = PowerShell.Create())
             {
-                powershell.AddScript(@"git add .");
-                powershell.AddScript(@"git commit -m ‘git Error Code İşlemleri Yapıldı’ ");
+              
+                powershell.AddScript(@"git commit -a -m ‘git Error Code İşlemleri Yapıldı’ ");
                 powershell.AddScript($"git push origin {lastName} ");
-                powershell.AddScript($"git merge BahadirBranch ");
             }
         }
     }
