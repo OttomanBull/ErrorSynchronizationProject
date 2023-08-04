@@ -12,22 +12,27 @@ namespace ErrorFinding
 {
     public class ErrorListDalJson
     {
-
-        public string GetTextFromGithub(string url)
+        public List<JToken> GetErrorListApi()
         {
-            string errorText;
-            using (HttpClient wc = new HttpClient())
+            string url = "https://developmentapi.fonhub.xyzteknoloji.com/api/errorrecord/all";
+
+            using (HttpClient hc = new HttpClient())
             {
-                wc.DefaultRequestHeaders.Add("Authorization", "token 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");
-                wc.DefaultRequestHeaders.Add("Accept", "application / vnd.github.v3.raw");
-                errorText = wc.GetStringAsync(url).Result;
+                string json = hc.GetStringAsync(url).Result;
+                List<JToken> errorListApi = JsonConvert.DeserializeObject<List<JToken>>(json);
+
+                return errorListApi;
             }
-            return errorText;
+        }
+        public string GetErrorListFromDocument(string document)
+        {
+            string jsonContent = File.ReadAllText(document);
+            return jsonContent;
         }
 
         public string JsTextToJsonText(string path)
         {
-            string jsErrorText = GetTextFromGithub(path);
+            string jsErrorText = GetErrorListFromDocument(path);
             int startPoint = jsErrorText.IndexOf("{");
             int finishPoint = jsErrorText.LastIndexOf("\",") - 1;
 
@@ -47,28 +52,14 @@ namespace ErrorFinding
 
             return jsonText;
         }
-
-        public List<JToken> GetErrorListApi()
+       
+        public JToken GetErrorListUI(string document)
         {
-            string url = "https://developmentapi.fonhub.xyzteknoloji.com/api/errorrecord/all";
-
-            using (HttpClient hc = new HttpClient())
-            {
-                string json = hc.GetStringAsync(url).Result;
-                List<JToken> errorListApi = JsonConvert.DeserializeObject<List<JToken>>(json);
-
-                return errorListApi;
-            }
-        }
-
-        public JToken GetErrorListUI(string url)
-        {
-             var jsonData = GetTextFromGithub(url);
+             var jsonData = GetErrorListFromDocument(document);
              JToken errorListUi = JToken.Parse(jsonData);
 
              return errorListUi;
         }
-
         public JToken GetErrorListManagement(string path)
         {
             string finaleErrorText = JsTextToJsonText(path);
@@ -76,7 +67,5 @@ namespace ErrorFinding
 
             return managamentList;
         }
-
-
     }
 }

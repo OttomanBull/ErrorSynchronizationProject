@@ -7,11 +7,11 @@ namespace ErrorFinding
 {
     public class ToFolder
     {
-        public string ManagementFileProcces(string url)
+        public string ManagementFileProcces(string filePath)
         {
             ErrorListDalJson errorListDalJson = new ErrorListDalJson();
             ErrorSynchronization errorSynchronization = new ErrorSynchronization();
-            JToken listErrorManagement = errorSynchronization.RemoveErrorFromJson(errorListDalJson.GetErrorListApi(), errorListDalJson.GetErrorListManagement(url));
+            JToken listErrorManagement = errorSynchronization.RemoveErrorFromJson(errorListDalJson.GetErrorListApi(), errorListDalJson.GetErrorListManagement(filePath));
             JToken errorListToCompare = listErrorManagement.SelectToken("errorCodes");
 
             string errorText = "module.exports = { \n";
@@ -29,12 +29,12 @@ namespace ErrorFinding
 
         }
 
-        public JToken UIFileProcces(string url)
+        public JToken UIFileProcces(string filePath)
         {
             ErrorListDalJson errorListDalJson = new ErrorListDalJson();
             ErrorSynchronization errorSynchronization = new ErrorSynchronization();
             List<JToken> errorListApi = errorListDalJson.GetErrorListApi();
-            JToken errorListUi = errorListDalJson.GetErrorListUI(url);
+            JToken errorListUi = errorListDalJson.GetErrorListUI(filePath);
             JToken addedErrorList = errorSynchronization.AddErrorToJson(errorListApi, errorListUi);
             JToken finaleErrorListUi = errorSynchronization.RemoveErrorFromJson(errorListDalJson.GetErrorListApi(), addedErrorList);
             
@@ -44,8 +44,8 @@ namespace ErrorFinding
         public void ChangeUIFile()
         {
             var configuration = new ConfigurationBuilder().AddJsonFile("appSettings.json", false, true).Build();
-            JToken uiJson = UIFileProcces(configuration.GetSection("url:UiEnUrl").Value);
-            string filePathUI = @"C:\Users\Work and Study\Documents\GitHub\CrowdFundingUI-master\src\shared\language\english.json";
+            JToken uiJson = UIFileProcces(configuration.GetSection(@"ErrorDirectory:UIDirectoryEn").Value);
+            string filePathUI = configuration.GetSection(@"ErrorDirectory:UIDirectoryEn").Value;
             ClearFile(filePathUI);
             WriteListToJsonFile(filePathUI, uiJson);
 
@@ -54,8 +54,8 @@ namespace ErrorFinding
         public void ChangeManagementFile()
         {
             var configuration = new ConfigurationBuilder().AddJsonFile("appSettings.json", false, true).Build();
-            string managementText = ManagementFileProcces(configuration.GetSection("url:ManagementEnUrl").Value);
-            string filePathMan = configuration.GetSection(@"Directory:ManagamentDirectory").Value;
+            string managementText = ManagementFileProcces(configuration.GetSection(@"ErrorDirectory:ManagamentDirectoryEn").Value);
+            string filePathMan = configuration.GetSection(@"ErrorDirectory:ManagamentDirectoryEn").Value;
             ClearFile(filePathMan);
             WriteDataToJSFile(filePathMan, managementText);
         }

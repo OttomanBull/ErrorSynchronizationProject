@@ -42,11 +42,9 @@ namespace ErrorFinding
                     }
                 }
             }
-
             return willBeAdded;
         }
-
-        public List<JToken> GetWillBeRemovedFromUi(List<JToken> apiErrorList, JToken toCompare)
+        public List<JToken> GetWillBeRemovedFromUI(List<JToken> apiErrorList, JToken toCompare)
         {
             JToken errorListToCompare = toCompare.SelectToken("errorCodes");
             List<JToken> willBeRemoved = new List<JToken>();
@@ -94,7 +92,7 @@ namespace ErrorFinding
         public JToken RemoveErrorFromJson(List<JToken> apiErrorList, JToken toCompare)
         {
             JToken errorListUi = AddErrorToJson(apiErrorList,toCompare);
-            List<JToken> errorListWillBeRemove = GetWillBeRemovedFromUi(apiErrorList, toCompare);
+            List<JToken> errorListWillBeRemove = GetWillBeRemovedFromUI(apiErrorList, toCompare);
             JToken errorCodes = errorListUi.SelectToken("errorCodes");
 
             JObject errorObject = errorCodes as JObject;

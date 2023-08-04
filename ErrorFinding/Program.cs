@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -15,13 +16,10 @@ class Program
         GitProccesCompiler gitProccesCompiler = new();   
         ToFolder toFolder = new();
         gitProccesCompiler.GitPullOperation();
-       // toFolder.ChangeManagementFile();
         toFolder.ChangeUIFile();
+     //   toFolder.ChangeManagementFile();
         gitProccesCompiler.GitPushOperation();
 
-        var configuration = new ConfigurationBuilder()
-          .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-          .Build();
     }
 }
 
