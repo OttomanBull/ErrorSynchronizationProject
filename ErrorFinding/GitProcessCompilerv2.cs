@@ -40,6 +40,7 @@ namespace ErrorFinding
                 powershell.AddScript(@"git commit -a -m ""git Error Code İşlemleri Yapıldı v2"" ");
                 powershell.AddScript(@"git push origin ErrorTestv1 ");
                 powershell.Invoke();
+
             }
         }
     }
