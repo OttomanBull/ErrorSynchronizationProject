@@ -8,9 +8,7 @@ namespace ErrorFinding
 {
     public class GitProccesCompiler
     {
-     
-
-        private async Task PowerShellGitOperationsAsync(string directory,string githubHTTPSURL)
+        private bool PowerShellGitOperations(string directory,string githubHTTPSURL)
         {
             using (PowerShell powershell = PowerShell.Create())
             {
@@ -19,18 +17,23 @@ namespace ErrorFinding
                 if (!File.Exists(Path.Combine(directory + "\\jsconfig.json")))
                 {
                     powershell.AddScript($"git clone {githubHTTPSURL}");
-                    await powershell.InvokeAsync();
+                    Thread.Sleep(15000);
                 }
                 powershell.AddScript("cd CrowdFundingUI");
-                await powershell.InvokeAsync();
+                Thread.Sleep(1000);
                 powershell.AddScript(@"git checkout master");
-                await powershell.InvokeAsync();
+                Thread.Sleep(1000);
                 powershell.AddScript(@"git pull");
-                await powershell.InvokeAsync();
+                Thread.Sleep(1000);
                 powershell.AddScript($"git checkout -b ErrorTestv1");
-                await powershell.InvokeAsync();
+                Thread.Sleep(1000);
                 Collection<PSObject> results = powershell.Invoke();
-        
+
+                if (!results.Any())
+                {
+                    return false;
+                }
+                return true;                
             }
         }
         public void GitPullOperation() 
@@ -39,17 +42,21 @@ namespace ErrorFinding
 
             string directory = configuration.GetSection("ProjectDirectory:CrowdFundingUIDirectory").Value; ;
             string githubHTTPSURL = configuration.GetSection("GithubHTTPS:UIHTTPS").Value;
-            var result = PowerShellGitOperationsAsync(directory, githubHTTPSURL);
+            var result = PowerShellGitOperations(directory, githubHTTPSURL);
 
+            if (!result)
+            {
+                new ArgumentNullException(nameof(githubHTTPSURL), $"{githubHTTPSURL} adresindeki repository {directory} konumuna kayıt edilemedi !");
+            }
         }
-        public async Task GitPushOperationAsync()
+        public void GitPushOperation()
         {           
             using (PowerShell powershell = PowerShell.Create())
             {             
-                powershell.AddScript(@"git commit -a -m ‘git Error Code İşlemleri Yapıldı v2’ ");
-                await powershell.InvokeAsync();
+                powershell.AddScript(@"git commit -a -m ""git Error Code İşlemleri Yapıldı v2"" ");
+                Thread.Sleep(30000);
                 powershell.AddScript(@"git push origin ErrorTestv1 ");
-                await powershell.InvokeAsync();
+                Thread.Sleep(30000);
             }
         }
     }

@@ -13,12 +13,13 @@ class Program
 {
     static void Main()
     {
-        GitProccesCompiler gitProccesCompiler = new();   
+        GitProcessCompilerv2 gitProcessCompilerv2 = new GitProcessCompilerv2();
         ToFolder toFolder = new();
-         gitProccesCompiler.GitPullOperation();
-          toFolder.ChangeUIFile();
-     //   toFolder.ChangeManagementFile();
-         gitProccesCompiler.GitPushOperationAsync();
+        gitProcessCompilerv2.GitCloneOperation();
+        gitProcessCompilerv2.GitPullOperation();
+        toFolder.ChangeUIFile();
+        gitProcessCompilerv2.GitPushOperation();
+         
 
     }
 }
