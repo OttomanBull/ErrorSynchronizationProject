@@ -60,8 +60,6 @@ namespace ErrorFinding
             WriteDataToJSFile(filePathMan, managementText);
         }
 
-
-
         static void ClearFile(string filePath)
         {
             File.WriteAllText(filePath, string.Empty);
