@@ -14,11 +14,13 @@ class Program
     static void Main()
     {
         GitProcessCompiler gitProcessCompiler = new GitProcessCompiler();
+
         ToFolder toFolder = new();
         gitProcessCompiler.GitCloneOperation();
         gitProcessCompiler.GitPullOperation();
         toFolder.ChangeUIFile();
         gitProcessCompiler.GitPushOperation();
+     
     }
 }
 
