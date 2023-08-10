@@ -12,9 +12,9 @@ namespace ErrorFinding
 {
     public class ErrorListDalJson
     {
-        public List<JToken> GetErrorListApi()
+        public static List<JToken> GetErrorListApi()
         {
-            string url = "https://developmentapi.fonhub.xyzteknoloji.com/api/errorrecord/all";
+            string url = GitProcessCompiler.GetAppSettingsLocation("Url", "ApiUrl");
 
             using (HttpClient hc = new HttpClient())
             {
@@ -24,13 +24,13 @@ namespace ErrorFinding
                 return errorListApi;
             }
         }
-        public string GetErrorListFromDocument(string document)
+        public static string GetErrorListFromDocument(string document)
         {
             string jsonContent = File.ReadAllText(document);
             return jsonContent;
         }
 
-        public string JsTextToJsonText(string path)
+        public static string JsTextToJsonText(string path)
         {
             string jsErrorText = GetErrorListFromDocument(path);
             int startPoint = jsErrorText.IndexOf("{");
@@ -53,14 +53,14 @@ namespace ErrorFinding
             return jsonText;
         }
        
-        public JToken GetErrorListUI(string document)
+        public static JToken GetErrorListUI(string document)
         {
              var jsonData = GetErrorListFromDocument(document);
              JToken errorListUi = JToken.Parse(jsonData);
 
              return errorListUi;
         }
-        public JToken GetErrorListManagement(string path)
+        public static JToken GetErrorListManagement(string path)
         {
             string finaleErrorText = JsTextToJsonText(path);
             JObject managamentList = JObject.Parse(finaleErrorText);

@@ -14,10 +14,10 @@ namespace ErrorFinding
 
     public class ErrorSynchronization
     {
-        public List<JToken> GetErrorWillBeAdded(List<JToken> apiErrorList,JToken toCompare)
+        public static List<JToken> GetErrorWillBeAdded(List<JToken> apiErrorList,JToken toCompare)
         {
             JToken errorListToCompare = toCompare.SelectToken("errorCodes");
-            List<JToken> willBeAdded = new List<JToken>();
+            List<JToken> willBeAdded = new();
 
             foreach (JToken apiError in apiErrorList.Children())
             {
@@ -44,7 +44,7 @@ namespace ErrorFinding
             }
             return willBeAdded;
         }
-        public List<JToken> GetWillBeRemovedFromUI(List<JToken> apiErrorList, JToken toCompare)
+        public static List<JToken> GetWillBeRemovedFromUI(List<JToken> apiErrorList, JToken toCompare)
         {
             JToken errorListToCompare = toCompare.SelectToken("errorCodes");
             List<JToken> willBeRemoved = new List<JToken>();
@@ -75,7 +75,7 @@ namespace ErrorFinding
         }
 
 
-        public JToken AddErrorToJson(List<JToken> apiErrorList, JToken toCompare)
+        public static JToken AddErrorToJson(List<JToken> apiErrorList, JToken toCompare)
         {
             List<JToken> errorListWillBeAdded = GetErrorWillBeAdded(apiErrorList, toCompare);
             
@@ -89,7 +89,7 @@ namespace ErrorFinding
             return toCompare;
         }
 
-        public JToken RemoveErrorFromJson(List<JToken> apiErrorList, JToken toCompare)
+        public static JToken RemoveErrorFromJson(List<JToken> apiErrorList, JToken toCompare)
         {
             JToken errorListUi = AddErrorToJson(apiErrorList,toCompare);
             List<JToken> errorListWillBeRemove = GetWillBeRemovedFromUI(apiErrorList, toCompare);

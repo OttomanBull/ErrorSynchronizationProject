@@ -14,48 +14,43 @@ namespace ErrorFinding
 {
     public class GitProcessCompiler
     {
-        public void GitCloneOperation()
+        public static void GitCloneOperation()
         {
             if (!File.Exists("C:\\Users\\Work and Study\\Documents\\GitHub\\CrowdFundingUI\\package.json"))
             {
-                using (var powershell = PowerShell.Create())
-                {
-                    powershell.AddScript($"cd {GetAppSettingsLocation("ProjectDirectory", "CrowdFundingDirectory")}");
-                    powershell.AddScript($"git clone {GetAppSettingsLocation("GithubHTTPS", "UIHTTPS")} ");
-                    powershell.Invoke();
-                }
-            }
-        }
-        public void GitPullOperation()
-        {
-            using (var powershell = PowerShell.Create())
-            {
-                powershell.AddScript($"cd {GetAppSettingsLocation("ProjectDirectory", "CrowdFundingUIDirectory")}");
-                powershell.AddScript(@"git checkout master");
-                powershell.AddScript(@"git pull");
-                powershell.AddScript($"git checkout -b {BranchName()}");
+                using var powershell = PowerShell.Create();
+                powershell.AddScript($"cd \"{GetAppSettingsLocation("ProjectDirectory", "CrowdFundingDirectory")}\" ");
+                powershell.AddScript($"git clone \"{GetAppSettingsLocation("GithubHTTPS", "UIHTTPS")}\" ");
+                Console.WriteLine("Clone İşlemi Yapılıyor");
                 powershell.Invoke();
             }
         }
-        public void GitPushOperation()
+        public static void GitPullOperation()
         {
-            using (var powershell = PowerShell.Create())
-            {
-                powershell.AddScript($"cd {GetAppSettingsLocation("ProjectDirectory", "CrowdFundingUIDirectory")} ");
-                powershell.AddScript($"git checkout {BranchName()}");
-                powershell.AddScript(@"git commit -a -m ""git Error Code İşlemleri Yapıldı v2"" ");
-                powershell.AddScript($"git push origin {BranchName()} ");
-                powershell.Invoke();
-            }
+            using var powershell = PowerShell.Create();
+            powershell.AddScript($"cd \"{GetAppSettingsLocation("ProjectDirectory", "CrowdFundingUIDirectory")}\" ");
+            powershell.AddScript(@"git checkout master");
+            powershell.AddScript(@"git pull");
+            powershell.AddScript($"git checkout -b \"{BranchName()}\" ");
+            Console.WriteLine("Pull işlemi yapılıyor");
+            powershell.Invoke();
+        }
+        public static void GitPushOperation()
+        {
+            using var powershell = PowerShell.Create();
+            powershell.AddScript($"cd \"{GetAppSettingsLocation("ProjectDirectory", "CrowdFundingUIDirectory")}\" ");
+            powershell.AddScript($"git checkout \"{BranchName()}\" ");
+            powershell.AddScript(@"git commit -a -m ""git Error Code İşlemleri Yapıldı v2"" ");
+            powershell.AddScript($"git push origin \"{BranchName()}\" ");
+            Console.WriteLine("Push İşlemi yapılıyor");
+            powershell.Invoke();
         }
 
-
-        private static string GetAppSettingsLocation(string appSettingsKey, string appSettingsValue)
+        //bir sonraki aşamada ağacın tamamını gezip gelen key'in valuesi dönülecek!
+        public static string GetAppSettingsLocation(string appSettingsKey, string appSettingsValue)
         {
             var configuration = new ConfigurationBuilder().AddJsonFile("appSettings.json", false, true).Build();
             string location = configuration.GetSection($"{appSettingsKey}:{appSettingsValue}").Value;
-            string character = "\"";
-            location = character + location + character;
             return location;
         }
 
