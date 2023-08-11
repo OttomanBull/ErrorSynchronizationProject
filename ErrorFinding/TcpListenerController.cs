@@ -10,38 +10,60 @@ namespace ErrorFinding
 {
     public class TcpListenerController
     {
-
         public static void TcpListenerControl()
         {
             TcpListener server;
-           
-            try
+
+
+            server = new TcpListener(IPAddress.Parse(GitProcessCompiler.GetAppSettingsLocation("TcpProtokol", "IpAdress")), Convert.ToInt32(GitProcessCompiler.GetAppSettingsLocation("TcpProtokol", "Port")));
+            server.Start();
+            Queue<TcpClient> clientQueue = new Queue<TcpClient>();
+            Console.WriteLine("Sunucu başlatıldı. Bağlantı bekleniyor...");
+
+            while (true)
             {
-                server = new TcpListener(IPAddress.Parse(GitProcessCompiler.GetAppSettingsLocation("TcpProtokol", "IpAdress")), Convert.ToInt32(GitProcessCompiler.GetAppSettingsLocation("TcpProtokol", "Port")));
-                server.Start();
-                byte[] buffer = new byte[256];
-                while(true)
+                Console.WriteLine("Client Bekleniyor");
+                TcpClient client = server.AcceptTcpClient();
+                Console.WriteLine("Client Bağlandı");
+                lock (clientQueue)
                 {
-                    Console.WriteLine("CLient Bekleniyor");
-                    TcpClient client = server.AcceptTcpClient();
-                    Console.WriteLine("CLient Bağlandı");
-                    NetworkStream stream = client.GetStream();
-                    while (stream.Read(buffer, 0, buffer.Length) != 0)
+                    clientQueue.Enqueue(client);
+                }
+                ProcessNextRequest(clientQueue);
+            }
+            static void ProcessNextRequest(Queue<TcpClient> clientQueue)
+            {
+                TcpClient nextClient = null;
+
+                lock (clientQueue)
+                {
+                    if (clientQueue.Count > 0)
                     {
-                        GitProcessCompiler.GitCloneOperation();
-                        GitProcessCompiler.GitPullOperation();
-                        ToFolder.ChangeUIFile();
-                        GitProcessCompiler.GitPushOperation();
+                        nextClient = clientQueue.Dequeue();
                     }
-                    client.Close();
+                }
+                if (nextClient != null)
+                {
+                    try
+                    {     
+                        NetworkStream stream = nextClient.GetStream();
+                        byte[] buffer = new byte[256];
+                        int bytesRead = stream.Read(buffer, 0, buffer.Length);
+                        if (bytesRead > 0)
+                        {
+                            GitProcessCompiler.GitCloneOperation();
+                            GitProcessCompiler.GitPullOperation();
+                            GitProcessCompiler.GitPushOperation();
+                            nextClient.Close();
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("Hata: " + ex.Message);
+                        // Hata durumunda kuyruktan isteği çıkartabilir veya başka bir işlem yapabilirsiniz
+                    }
                 }
             }
-            catch(SocketException exc)
-            {
-                Console.WriteLine(exc.Message);
-            }
-           
-
         }
     }
 }
